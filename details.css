@@ -1,0 +1,340 @@
+/* Estilos Gerais */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #ffebee; /* Vermelho claro */
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+}
+
+#pokemon-details {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  width: 100%;
+}
+
+/* Cabeçalho */
+.pokemon-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.pokemon-header h1 {
+  color: #d32f2f; /* Vermelho escuro */
+  text-transform: capitalize;
+  margin: 0;
+}
+
+.pokemon-header img {
+  width: 150px;
+  height: 150px;
+  image-rendering: pixelated; /* Garante que as imagens sejam exibidas em pixel art */
+}
+
+/* Seções */
+.section {
+  margin-bottom: 20px;
+}
+
+.section h2 {
+  color: #d32f2f; /* Vermelho escuro */
+  border-bottom: 2px solid #d32f2f;
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+}
+
+.section p {
+  margin: 10px 0;
+  color: #333;
+}
+
+.section ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.section ul li {
+  background-color: #ffcdd2; /* Vermelho claro */
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 5px;
+  color: #333;
+}
+
+/* Jogos e Locais */
+#pokemon-locations {
+  color: #333;
+  margin: 10px 0;
+}
+
+.games-container {
+  margin-top: 10px;
+}
+
+.game-card {
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  margin-bottom: 10px;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.game-card p {
+  margin: 5px 0;
+  color: #333;
+  display: flex;
+  justify-content: space-between;
+}
+
+.game-card span {
+  font-weight: bold;
+}
+
+/* Dinâmica de cores por região */
+.game-card.red {
+  background-color: #e57373; /* Vermelho para Red */
+}
+
+.game-card.blue {
+  background-color: #64b5f6; /* Azul para Blue */
+}
+
+.game-card.fire-red {
+  background-color: #ff7043; /* Vermelho alaranjado para Fire Red */
+}
+
+.game-card.leaf-green {
+  background-color: #81c784; /* Verde para Leaf Green */
+}
+
+.game-card.yellow {
+  background-color: #ffeb3b; /* Amarelo para Yellow */
+}
+
+.game-card.gold {
+  background-color: #ffd700; /* Dourado para Gold */
+}
+
+.game-card.silver {
+  background-color: #c0c0c0; /* Prata para Silver */
+}
+
+.game-card.crystal {
+  background-color: #80deea; /* Azul claro para Crystal */
+}
+
+.game-card.ruby {
+  background-color: #e53935; /* Vermelho escuro para Ruby */
+}
+
+.game-card.sapphire {
+  background-color: #1e88e5; /* Azul escuro para Sapphire */
+}
+
+.game-card.emerald {
+  background-color: #66bb6a; /* Verde para Emerald */
+}
+
+.game-card.diamond {
+  background-color: #64b5f6; /* Azul mais claro para Diamond */
+}
+
+.game-card.pearl {
+  background-color: #ff80ab; /* Rosa para Pearl */
+}
+
+.game-card.platinum {
+  background-color: #d3d3d3; /* Cinza para Platinum */
+}
+
+.game-card.black {
+  background-color: #212121; /* Preto para Black */
+}
+
+.game-card.white {
+  background-color: #f5f5f5; /* Branco para White */
+}
+
+.game-card.sun {
+  background-color: #ffeb3b; /* Amarelo para Sun */
+}
+
+.game-card.moon {
+  background-color: #8e24aa; /* Roxo para Moon */
+}
+
+.game-card.ultra-sun {
+  background-color: #ff7043; /* Laranja para Ultra Sun */
+}
+
+.game-card.ultra-moon {
+  background-color: #6a1b9a; /* Roxo escuro para Ultra Moon */
+}
+
+.game-card.sword {
+  background-color: #1e88e5; /* Azul metálico para Sword */
+}
+
+.game-card.shield {
+  background-color: #d32f2f; /* Vermelho metálico para Shield */
+}
+
+/* Efeito de hover */
+.game-card:hover {
+  transform: scale(1.05);
+}
+
+.game-card.red:hover {
+  background-color: #ef5350; /* Vermelho mais forte para Red */
+}
+
+.game-card.blue:hover {
+  background-color: #42a5f5; /* Azul mais escuro para Blue */
+}
+
+.game-card.fire-red:hover {
+  background-color: #ff5722; /* Vermelho mais intenso para Fire Red */
+}
+
+.game-card.leaf-green:hover {
+  background-color: #66bb6a; /* Verde mais escuro para Leaf Green */
+}
+
+.game-card.yellow:hover {
+  background-color: #fdd835; /* Amarelo mais forte para Yellow */
+}
+
+.game-card.gold:hover {
+  background-color: #ffcc00; /* Dourado mais intenso para Gold */
+}
+
+.game-card.silver:hover {
+  background-color: #b0b0b0; /* Prata mais forte para Silver */
+}
+
+.game-card.crystal:hover {
+  background-color: #4dd0e1; /* Azul mais forte para Crystal */
+}
+
+.game-card.ruby:hover {
+  background-color: #c62828; /* Vermelho escuro mais forte para Ruby */
+}
+
+.game-card.sapphire:hover {
+  background-color: #1565c0; /* Azul mais forte para Sapphire */
+}
+
+.game-card.emerald:hover {
+  background-color: #43a047; /* Verde mais forte para Emerald */
+}
+
+.game-card.diamond:hover {
+  background-color: #42a5f5; /* Azul mais forte para Diamond */
+}
+
+.game-card.pearl:hover {
+  background-color: #f48fb1; /* Rosa mais forte para Pearl */
+}
+
+.game-card.platinum:hover {
+  background-color: #a6a6a6; /* Cinza mais forte para Platinum */
+}
+
+.game-card.black:hover {
+  background-color: #424242; /* Preto mais intenso para Black */
+}
+
+.game-card.white:hover {
+  background-color: #e0e0e0; /* Branco mais forte para White */
+}
+
+.game-card.sun:hover {
+  background-color: #fbc02d; /* Amarelo mais forte para Sun */
+}
+
+.game-card.moon:hover {
+  background-color: #7b1fa2; /* Roxo mais forte para Moon */
+}
+
+.game-card.ultra-sun:hover {
+  background-color: #ff5722; /* Laranja mais intenso para Ultra Sun */
+}
+
+.game-card.ultra-moon:hover {
+  background-color: #9c27b0; /* Roxo mais intenso para Ultra Moon */
+}
+
+.game-card.sword:hover {
+  background-color: #1976d2; /* Azul metálico mais forte para Sword */
+}
+
+.game-card.shield:hover {
+  background-color: #c62828; /* Vermelho metálico mais forte para Shield */
+}
+
+/* Linha Evolutiva */
+.evolution-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.evolution-stage {
+  background-color: #ffcdd2; /* Vermelho claro */
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+  flex: 1 1 calc(33.333% - 20px);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.evolution-stage img {
+  width: 80px;
+  height: 80px;
+  image-rendering: pixelated; /* Garante que as imagens sejam exibidas em pixel art */
+}
+
+.evolution-stage p {
+  margin: 5px 0;
+  color: #333;
+}
+
+/* Botão de Voltar */
+.back-button {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #d32f2f; /* Vermelho escuro */
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
+  text-align: center;
+  transition: background-color 0.2s;
+}
+
+.back-button:hover {
+  background-color: #b71c1c; /* Vermelho mais escuro */
+}
+
+/* Responsividade para Mobile */
+@media (max-width: 600px) {
+  .pokemon-header img {
+    width: 120px;
+    height: 120px;
+  }
+
+  .games-container, .evolution-container {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
+
+  .game-card, .evolution-stage {
+    flex: 1 1 calc(50% - 10px);
+  }

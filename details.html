@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalhes do Pokémon</title>
+  <link rel="stylesheet" href="details.css">
+</head>
+<body>
+  <div id="pokemon-details">
+    <!-- Cabeçalho -->
+    <div class="pokemon-header">
+      <h1 id="pokemon-name"></h1>
+      <img id="pokemon-image" src="" alt="Pokémon">
+    </div>
+
+    <!-- Informações Básicas -->
+    <div class="section">
+      <h2>Informações Básicas</h2>
+      <p><strong>Tipo:</strong> <span id="pokemon-types"></span></p>
+      <p><strong>Altura:</strong> <span id="pokemon-height"></span> m</p>
+      <p><strong>Peso:</strong> <span id="pokemon-weight"></span> kg</p>
+    </div>
+
+    <!-- Estatísticas -->
+    <div class="section">
+      <h2>Estatísticas</h2>
+      <ul id="pokemon-stats"></ul>
+    </div>
+
+    <!-- Jogos e Locais -->
+    <div class="section">
+      <h2>Jogos e Locais</h2>
+      <p><strong>Locais:</strong> <span id="pokemon-locations"></span></p>
+      <div id="pokemon-games" class="games-container"></div>
+    </div>
+
+    <!-- Linha Evolutiva -->
+    <div class="section">
+      <h2>Linha Evolutiva</h2>
+      <div id="evolution-chain" class="evolution-container"></div>
+    </div>
+
+    <!-- Botão de Voltar -->
+    <a href="index.html" class="back-button">Voltar para a Pokédex</a>
+  </div>
+  <script src="details.js"></script>
+</body>
+</html>
