@@ -176,24 +176,37 @@ export const App: React.FC = () => {
   }, []);
 
   return (
-    <div className="app-container">
-      {/* Navbar */}
+    <div className="pokedex-chassis">
+      {/* Top Hardware Bar: Sensor Lens + Indicator LEDs + HUD */}
       <Navbar
         favoritesCount={favoritesCount}
         onOpenFavorites={() => setIsFavoritesOpen(true)}
         onResetFilters={handleResetFilters}
       />
 
-      <main className="main-content">
-        {/* Hero Section */}
-        <section className="hero-section">
-          <h1 className="hero-title">Pokédex Nacional</h1>
-          <p className="hero-description">
-            Explore todos os 1025 Pokémon com atributos detalhados, linha evolutiva,
-            efeito sonoro oficial e locais de captura em cada jogo da franquia.
-          </p>
+      {/* Recessed High-Tech LCD Screen Enclosure */}
+      <div className="pokedex-screen-enclosure">
+        <main className="pokedex-lcd-screen">
+          {/* HUD Corner Reticles */}
+          <span className="screen-hud-corner tl" />
+          <span className="screen-hud-corner tr" />
+          <span className="screen-hud-corner bl" />
+          <span className="screen-hud-corner br" />
 
-          {/* Filter Bar */}
+          {/* LCD Screen Device Banner */}
+          <div className="lcd-banner">
+            <div className="lcd-title-group">
+              <h1 className="lcd-main-title">
+                POKÉDEX NACIONAL
+                <span className="lcd-status-badge">SILPH CO. OS</span>
+              </h1>
+              <span className="lcd-subtitle">
+                SISTEMA BIOMÉTRICO DE REGISTRO // GERAÇÕES I - IX
+              </span>
+            </div>
+          </div>
+
+          {/* Filter Bar Controls */}
           <FilterBar
             searchTerm={searchTerm}
             onSearchChange={setSearchTerm}
@@ -205,22 +218,34 @@ export const App: React.FC = () => {
             onSortChange={setSortKey}
             resultsCount={filteredAndSortedPokemon.length}
           />
-        </section>
 
-        {/* Pokemon List Grid */}
-        <PokemonList
-          pokemonList={visiblePokemon}
-          loading={loading}
-          isFavorite={isFavorite}
-          onToggleFavorite={toggleFavorite}
-          onSelectPokemon={setSelectedPokemonId}
-          hasMore={hasMore}
-          onLoadMore={handleLoadMore}
-          totalFilteredCount={filteredAndSortedPokemon.length}
-        />
-      </main>
+          {/* Pokemon Specimen Grid */}
+          <PokemonList
+            pokemonList={visiblePokemon}
+            loading={loading}
+            isFavorite={isFavorite}
+            onToggleFavorite={toggleFavorite}
+            onSelectPokemon={setSelectedPokemonId}
+            hasMore={hasMore}
+            onLoadMore={handleLoadMore}
+            totalFilteredCount={filteredAndSortedPokemon.length}
+          />
+        </main>
+      </div>
 
-      {/* Detail Modal */}
+      {/* Hardware Bottom Chassis Footer */}
+      <footer className="hardware-footer">
+        <span>POKÉDEX HARDWARE MODEL PK-890 // SILPH CO. ARCHIVE</span>
+        <span>
+          DADOS FORNECIDOS POR{' '}
+          <a href="https://pokeapi.co/" target="_blank" rel="noopener noreferrer">
+            POKÉAPI
+          </a>{' '}
+          • REACT 19 & TYPESCRIPT
+        </span>
+      </footer>
+
+      {/* Dual-Screen Diagnostic Terminal Modal */}
       <PokemonModal
         pokemonId={selectedPokemonId}
         onClose={() => setSelectedPokemonId(null)}
@@ -230,7 +255,7 @@ export const App: React.FC = () => {
         totalPokemonCount={allPokemon.length || 1025}
       />
 
-      {/* Favorites Drawer */}
+      {/* Favorites Storage Drawer */}
       <FavoritesDrawer
         isOpen={isFavoritesOpen}
         onClose={() => setIsFavoritesOpen(false)}
@@ -238,17 +263,6 @@ export const App: React.FC = () => {
         onSelectPokemon={setSelectedPokemonId}
         onRemoveFavorite={toggleFavorite}
       />
-
-      {/* Footer */}
-      <footer className="app-footer">
-        <p>
-          Pokédex Nacional Moderna • Dados fornecidos por{' '}
-          <a href="https://pokeapi.co/" target="_blank" rel="noopener noreferrer">
-            PokéAPI
-          </a>{' '}
-          • Desenvolvido com React, Vite & TypeScript
-        </p>
-      </footer>
     </div>
   );
 };

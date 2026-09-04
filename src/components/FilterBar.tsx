@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import { Search, X, SlidersHorizontal } from 'lucide-react';
+import { Crosshair, X, SlidersHorizontal } from 'lucide-react';
 import { POKEMON_TYPES, GENERATIONS } from '../constants/pokemonData';
 import type { GenerationKey, SortKey } from '../types/pokemon';
 
@@ -28,7 +28,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
 }) => {
   const searchInputRef = useRef<HTMLInputElement | null>(null);
 
-  // Focus search input on pressing '/'
+  // Focus on pressing '/'
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (
@@ -46,71 +46,60 @@ export const FilterBar: React.FC<FilterBarProps> = ({
   }, []);
 
   return (
-    <div className="filter-section">
-      {/* Search Bar */}
-      <div className="search-wrapper">
-        <div className="search-input-container">
-          <Search size={20} className="search-icon" />
-          <input
-            ref={searchInputRef}
-            type="text"
-            className="search-input"
-            value={searchTerm}
-            onChange={(e) => onSearchChange(e.target.value)}
-            placeholder="Buscar por nome, número (#025), tipo (fogo) ou região (kanto)..."
-            aria-label="Buscar Pokémon"
-          />
-          {searchTerm && (
-            <button
-              className="search-clear-btn"
-              onClick={() => onSearchChange('')}
-              title="Limpar pesquisa"
-            >
-              <X size={16} />
-            </button>
-          )}
-          <span className="search-shortcut-badge" title="Pressione / para buscar">
-            /
-          </span>
-        </div>
+    <div className="filter-assembly">
+      {/* Scanner Frequency Search Bar */}
+      <div className="scanner-search-box">
+        <Crosshair size={20} className="scanner-icon" />
+        <input
+          ref={searchInputRef}
+          type="text"
+          className="scanner-input"
+          value={searchTerm}
+          onChange={(e) => onSearchChange(e.target.value)}
+          placeholder="Rastrear espécime por nome, código (#025), tipo (fogo) ou região (kanto)..."
+          aria-label="Buscar Pokémon no Scanner"
+        />
+        {searchTerm && (
+          <button
+            className="search-clear-btn"
+            onClick={() => onSearchChange('')}
+            title="Limpar rastreador"
+          >
+            <X size={16} />
+          </button>
+        )}
+        <span className="scanner-shortcut">RADAR [/]</span>
       </div>
 
-      {/* Generation Tabs */}
-      <div className="generation-tabs-container">
+      {/* Generation Hardware Cartridges */}
+      <div className="generation-switchboard">
         <button
-          className={`gen-tab-btn ${selectedGeneration === 'all' ? 'active' : ''}`}
+          className={`gen-cartridge-btn ${selectedGeneration === 'all' ? 'active' : ''}`}
           onClick={() => onSelectGeneration('all')}
         >
-          <span className="gen-title">Todas as</span>
-          <span className="gen-region">Gerações</span>
+          <span className="gen-code">NATIONAL</span>
+          <span className="gen-name">Todas as Regiões</span>
         </button>
 
         {GENERATIONS.map((gen) => (
           <button
             key={gen.id}
-            className={`gen-tab-btn ${selectedGeneration === gen.id ? 'active' : ''}`}
+            className={`gen-cartridge-btn ${selectedGeneration === gen.id ? 'active' : ''}`}
             onClick={() => onSelectGeneration(gen.id as GenerationKey)}
           >
-            <span className="gen-title">{gen.name}</span>
-            <span className="gen-region">{gen.region}</span>
+            <span className="gen-code">GEN 0{gen.id}</span>
+            <span className="gen-name">{gen.region}</span>
           </button>
         ))}
       </div>
 
-      {/* Type Filter Pills */}
-      <div className="type-pills-container">
+      {/* Type Power Cell Matrix */}
+      <div className="type-filter-matrix">
         <button
-          className={`type-pill ${selectedType === '' ? 'active' : ''}`}
+          className={`type-cell-btn ${selectedType === '' ? 'active' : ''}`}
           onClick={() => onSelectType('')}
-          style={
-            selectedType === ''
-              ? {
-                  background: 'linear-gradient(135deg, #ef4444 0%, #38bdf8 100%)',
-                }
-              : undefined
-          }
         >
-          Todos os Tipos
+          TODOS OS TIPOS
         </button>
 
         {Object.values(POKEMON_TYPES).map((type) => {
@@ -118,46 +107,46 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           return (
             <button
               key={type.name}
-              className={`type-pill ${isSelected ? 'active' : ''}`}
+              className={`type-cell-btn ${isSelected ? 'active' : ''}`}
               onClick={() => onSelectType(isSelected ? '' : type.name)}
               style={
                 isSelected
-                  ? {
+                  ? ({
                       background: type.bgGradient,
                       '--glow-color': type.glow,
-                    } as React.CSSProperties
+                    } as React.CSSProperties)
                   : undefined
               }
             >
               <span
-                className="type-pill-dot"
+                className="type-cell-dot"
                 style={{ backgroundColor: type.color }}
               />
-              {type.label}
+              {type.label.toUpperCase()}
             </button>
           );
         })}
       </div>
 
-      {/* Results Controls Bar */}
-      <div className="controls-bar">
-        <div className="results-count">
-          Mostrando <strong>{resultsCount}</strong> Pokémon encontrados
+      {/* HUD Telemetry Readout & Sort */}
+      <div className="hud-controls-bar">
+        <div className="hud-counter-text">
+          ESPÉCIMES RASTREADOS: <strong>{resultsCount}</strong>
         </div>
 
-        <div className="sort-select-wrapper">
-          <SlidersHorizontal size={16} className="sort-label" />
-          <span className="sort-label">Ordenar:</span>
+        <div className="hud-sort-box">
+          <SlidersHorizontal size={14} color="#38bdf8" />
+          <span className="hud-sort-label">ORDENAÇÃO:</span>
           <select
-            className="sort-select"
+            className="hud-sort-select"
             value={sortKey}
             onChange={(e) => onSortChange(e.target.value as SortKey)}
-            aria-label="Opções de ordenação"
+            aria-label="Ordenação de espécimes"
           >
-            <option value="id-asc">Número (# Crescente)</option>
-            <option value="id-desc">Número (# Decrescente)</option>
-            <option value="name-asc">Nome (A - Z)</option>
-            <option value="name-desc">Nome (Z - A)</option>
+            <option value="id-asc">CÓDIGO (# CRESCENTE)</option>
+            <option value="id-desc">CÓDIGO (# DECRESCENTE)</option>
+            <option value="name-asc">NOME (A - Z)</option>
+            <option value="name-desc">NOME (Z - A)</option>
           </select>
         </div>
       </div>

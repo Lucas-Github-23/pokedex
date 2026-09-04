@@ -4,6 +4,7 @@ export interface PokemonListItem {
   url: string;
   sprite: string;
   types?: string[];
+  japaneseName?: string;
 }
 
 export interface PokemonStat {
@@ -19,6 +20,7 @@ export interface PokemonAbility {
 export interface PokemonDetail {
   id: number;
   name: string;
+  japaneseName?: string;
   height: number; // in decimeters from API
   weight: number; // in hectograms from API
   types: string[];

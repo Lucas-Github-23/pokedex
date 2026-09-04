@@ -51,7 +51,7 @@ export const PokemonList: React.FC<PokemonListProps> = ({
 
   return (
     <>
-      <div className="pokemon-grid">
+      <div className="pokemon-specimen-grid">
         {pokemonList.map((pokemon) => (
           <PokemonCard
             key={pokemon.id}

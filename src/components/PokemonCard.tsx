@@ -2,6 +2,7 @@ import React from 'react';
 import { Heart } from 'lucide-react';
 import type { PokemonListItem } from '../types/pokemon';
 import { POKEMON_TYPES } from '../constants/pokemonData';
+import { getJapaneseName } from '../constants/japaneseNames';
 
 interface PokemonCardProps {
   pokemon: PokemonListItem;
@@ -16,13 +17,14 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
   onToggleFavorite,
   onSelect,
 }) => {
-  const formattedId = `#${String(pokemon.id).padStart(4, '0')}`;
+  const formattedId = `№ ${String(pokemon.id).padStart(4, '0')}`;
   const primaryType = pokemon.types?.[0] || 'normal';
   const typeConfig = POKEMON_TYPES[primaryType] || POKEMON_TYPES.normal;
+  const japaneseText = pokemon.japaneseName || getJapaneseName(pokemon.id);
 
   return (
     <div
-      className="pokemon-card"
+      className="specimen-card"
       onClick={() => onSelect(pokemon.id)}
       role="button"
       tabIndex={0}
@@ -30,46 +32,60 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
         {
           '--card-accent-color': typeConfig.color,
           '--card-glow': typeConfig.glow,
-          '--card-bg-gradient': typeConfig.bgGradient,
         } as React.CSSProperties
       }
     >
-      <div className="card-header">
-        <span className="card-number">{formattedId}</span>
+      {/* HUD Corner Reticles */}
+      <span className="card-bracket tl" />
+      <span className="card-bracket tr" />
+      <span className="card-bracket bl" />
+      <span className="card-bracket br" />
+
+      {/* Japanese Katakana Watermark Background */}
+      <div className="card-japanese-watermark" aria-hidden="true">
+        {japaneseText}
+      </div>
+
+      {/* Card Header (Specimen Number + Favorite Button) */}
+      <div className="specimen-header">
+        <span className="specimen-id">{formattedId}</span>
         <button
-          className={`card-fav-btn ${isFavorite ? 'is-fav' : ''}`}
+          className={`card-fav-hardware-btn ${isFavorite ? 'is-fav' : ''}`}
           onClick={(e) => onToggleFavorite(pokemon, e)}
-          title={isFavorite ? 'Remover dos favoritos' : 'Favoritar'}
-          aria-label={isFavorite ? 'Remover dos favoritos' : 'Favoritar'}
+          title={isFavorite ? 'Remover dos favoritos' : 'Favoritar espécime'}
+          aria-label={isFavorite ? 'Remover dos favoritos' : 'Favoritar espécime'}
         >
           <Heart
-            size={16}
+            size={14}
             fill={isFavorite ? '#ef4444' : 'none'}
             color={isFavorite ? '#ef4444' : 'currentColor'}
           />
         </button>
       </div>
 
-      <div className="card-image-wrapper">
-        <div className="card-image-aura" />
+      {/* Specimen Radar Chamber */}
+      <div className="specimen-sprite-box">
+        <div className="specimen-radar-ring" />
         <img
           src={pokemon.sprite}
           alt={pokemon.name}
-          className="card-sprite"
+          className="specimen-sprite-img"
           loading="lazy"
         />
       </div>
 
-      <h3 className="card-name">{pokemon.name}</h3>
+      {/* Specimen Identification */}
+      <h3 className="specimen-name">{pokemon.name}</h3>
 
+      {/* Type Badges / Power Cells */}
       {pokemon.types && pokemon.types.length > 0 ? (
-        <div className="card-types">
+        <div className="specimen-types">
           {pokemon.types.map((type) => {
             const cfg = POKEMON_TYPES[type] || POKEMON_TYPES.normal;
             return (
               <span
                 key={type}
-                className="type-tag"
+                className="type-metal-badge"
                 style={{ background: cfg.bgGradient }}
               >
                 {cfg.label}
@@ -78,9 +94,12 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
           })}
         </div>
       ) : (
-        <div className="card-types">
-          <span className="type-tag" style={{ background: typeConfig.bgGradient }}>
-            Ver Detalhes
+        <div className="specimen-types">
+          <span
+            className="type-metal-badge"
+            style={{ background: typeConfig.bgGradient }}
+          >
+            ANALISAR
           </span>
         </div>
       )}

@@ -128,6 +128,7 @@ export async function fetchPokemonSpecies(speciesUrl: string): Promise<{
   flavorText: string;
   genus: string;
   generation: string;
+  japaneseName: string;
 }> {
   if (speciesCache.has(speciesUrl)) {
     return speciesCache.get(speciesUrl);
@@ -136,6 +137,12 @@ export async function fetchPokemonSpecies(speciesUrl: string): Promise<{
   try {
     const response = await fetch(speciesUrl);
     const data = await response.json();
+
+    // Extract Japanese Katakana name
+    const jaEntry = data.names?.find(
+      (n: any) => n.language.name === 'ja-hrkt' || n.language.name === 'ja'
+    );
+    const japaneseName = jaEntry?.name || '';
 
     // Find flavor text in pt-BR or en
     const ptEntry = data.flavor_text_entries?.find(
@@ -157,6 +164,7 @@ export async function fetchPokemonSpecies(speciesUrl: string): Promise<{
       flavorText,
       genus,
       generation: data.generation?.name || '',
+      japaneseName,
     };
 
     speciesCache.set(speciesUrl, result);
@@ -168,6 +176,7 @@ export async function fetchPokemonSpecies(speciesUrl: string): Promise<{
       flavorText: '',
       genus: 'Pokémon',
       generation: '',
+      japaneseName: '',
     };
   }
 }
