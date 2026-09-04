@@ -1,22 +1,18 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pokédex</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-  <div id="pokedex">
-    <h1>Pokédex</h1>
-    <div class="search-container">
-      <input type="text" id="search-input" placeholder="Digite o nome, número, tipo ou região...">
-      <button id="search-button">Buscar</button>
-    </div>
-    <div id="pokemon-list" class="pokemon-list">
-      <!-- Lista de Pokémon será preenchida via JavaScript -->
-    </div>
-  </div>
-  <script src="script.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/pokeball.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Pokédex Nacional Moderna - Explore todos os Pokémon, atributos, fraquezas, linha evolutiva e locais de captura em alta definição." />
+    <title>Pokédex Nacional | React & TypeScript</title>
+    <!-- Google Fonts: Outfit & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>
