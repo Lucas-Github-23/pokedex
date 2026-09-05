@@ -27,8 +27,15 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
     <div
       className="specimen-card"
       onClick={() => onSelect(pokemon.id)}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onSelect(pokemon.id);
+        }
+      }}
       role="button"
       tabIndex={0}
+      aria-label={`Visualizar dados de ${pokemon.name}`}
       style={
         {
           '--card-accent-color': typeConfig.color,
@@ -45,7 +52,10 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
         <span className="specimen-id-badge">{formattedId}</span>
         <button
           className={`card-fav-hardware-btn ${isFavorite ? 'is-fav' : ''}`}
-          onClick={(e) => onToggleFavorite(pokemon, e)}
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleFavorite(pokemon, e);
+          }}
           title={isFavorite ? 'Remover dos favoritos' : 'Favoritar espécime'}
           aria-label={isFavorite ? 'Remover dos favoritos' : 'Favoritar espécime'}
         >
@@ -65,6 +75,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
           alt={pokemon.name}
           className="specimen-sprite-img"
           loading="lazy"
+          draggable={false}
         />
       </div>
 

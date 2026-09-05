@@ -634,9 +634,18 @@ body::before {
   flex-direction: column;
   align-items: center;
   cursor: pointer;
+  user-select: none;
   transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
   overflow: hidden;
   box-shadow: 0 3px 0 #0a0d13, 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+.specimen-card * {
+  pointer-events: none;
+}
+
+.specimen-card .card-fav-hardware-btn {
+  pointer-events: auto;
 }
 
 .specimen-card:hover {
@@ -787,15 +796,16 @@ body::before {
    AUTHENTIC POKÉDEX DIAGNOSTIC TERMINAL (MODAL HARDWARE)
    ========================================================================== */
 
+.diagnostic-overlay,
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background-color: rgba(4, 6, 10, 0.85);
+  background-color: rgba(4, 6, 10, 0.88);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 16px;
-  z-index: 1000;
+  z-index: 99999;
   animation: fadeIn 0.15s ease-out;
 }
 
