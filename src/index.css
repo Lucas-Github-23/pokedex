@@ -1508,6 +1508,158 @@ body::before {
 }
 
 /* ==========================================================================
+   AUTOMATIC GRADUAL LOADING & TELEMETRY RADAR
+   ========================================================================== */
+
+.auto-scroll-sentinel {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 36px 16px 28px;
+  position: relative;
+  z-index: 5;
+}
+
+.telemetry-radar-loader {
+  width: 100%;
+  max-width: 540px;
+  background: rgba(13, 20, 36, 0.9);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  border-radius: 12px;
+  padding: 16px 22px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 0 16px rgba(56, 189, 248, 0.08);
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: telemetryPulseGlow 2.5s infinite alternate;
+}
+
+@keyframes telemetryPulseGlow {
+  0% {
+    border-color: rgba(56, 189, 248, 0.25);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), inset 0 0 10px rgba(56, 189, 248, 0.05);
+  }
+  100% {
+    border-color: rgba(56, 189, 248, 0.6);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(56, 189, 248, 0.15);
+  }
+}
+
+.telemetry-loader-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--lens-cyan);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.radar-ping-icon {
+  color: var(--lens-cyan);
+  flex-shrink: 0;
+}
+
+.radar-pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 8px #22c55e;
+  animation: radarDotPing 1.2s cubic-bezier(0, 0, 0.2, 1) infinite;
+  flex-shrink: 0;
+}
+
+@keyframes radarDotPing {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.8);
+  }
+}
+
+.telemetry-loader-label {
+  flex: 1;
+  color: var(--text-primary);
+  font-size: 0.76rem;
+}
+
+.telemetry-spinner {
+  color: var(--lens-cyan);
+  animation: spin 1s linear infinite;
+  flex-shrink: 0;
+}
+
+.telemetry-progress-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.telemetry-progress-info {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+}
+
+.telemetry-progress-track {
+  width: 100%;
+  height: 6px;
+  background: rgba(15, 23, 42, 0.8);
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  position: relative;
+}
+
+.telemetry-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #0284c7, #38bdf8, #818cf8);
+  border-radius: 999px;
+  transition: width 0.35s ease-out;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.7);
+}
+
+.auto-scroll-completed {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 40px 16px 24px;
+}
+
+.completed-divider {
+  flex: 1;
+  max-width: 180px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.3), transparent);
+}
+
+.completed-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: 999px;
+  color: var(--lens-cyan);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+/* ==========================================================================
    RESPONSIVE BREAKPOINTS
    ========================================================================== */
 

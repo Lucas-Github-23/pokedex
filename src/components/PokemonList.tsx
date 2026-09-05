@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import type { PokemonListItem } from '../types/pokemon';
 import { PokemonCard } from './PokemonCard';
-import { SearchX, ArrowDownCircle } from 'lucide-react';
+import { SearchX, Loader2, CheckCircle2, Radio } from 'lucide-react';
 
 interface PokemonListProps {
   pokemonList: PokemonListItem[];
@@ -24,6 +24,48 @@ export const PokemonList: React.FC<PokemonListProps> = ({
   onLoadMore,
   totalFilteredCount,
 }) => {
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
+  const [isAutoLoading, setIsAutoLoading] = useState(false);
+
+  // Trigger gradual automatic load when sentinel is approached
+  const triggerAutoLoad = useCallback(() => {
+    if (!hasMore || isAutoLoading || loading) return;
+    setIsAutoLoading(true);
+    onLoadMore();
+    // Brief throttle to smoothly stream in items and avoid scroll thrashing
+    setTimeout(() => {
+      setIsAutoLoading(false);
+    }, 220);
+  }, [hasMore, isAutoLoading, loading, onLoadMore]);
+
+  // Automatic infinite scroll using IntersectionObserver
+  useEffect(() => {
+    if (!hasMore) return;
+
+    const sentinelEl = sentinelRef.current;
+    if (!sentinelEl) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry.isIntersecting) {
+          triggerAutoLoad();
+        }
+      },
+      {
+        root: null, // observe relative to window/viewport
+        rootMargin: '450px', // preload before user hits bottom for seamless flow
+        threshold: 0.05,
+      }
+    );
+
+    observer.observe(sentinelEl);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [hasMore, triggerAutoLoad]);
+
   if (loading && pokemonList.length === 0) {
     return (
       <div className="pokemon-grid">
@@ -49,8 +91,13 @@ export const PokemonList: React.FC<PokemonListProps> = ({
     );
   }
 
+  const progressPercent = totalFilteredCount > 0
+    ? Math.min(100, Math.round((pokemonList.length / totalFilteredCount) * 100))
+    : 100;
+
   return (
     <>
+      {/* Pokemon Specimen Grid */}
       <div className="pokemon-specimen-grid">
         {pokemonList.map((pokemon) => (
           <PokemonCard
@@ -63,25 +110,46 @@ export const PokemonList: React.FC<PokemonListProps> = ({
         ))}
       </div>
 
+      {/* Gradual Automatic Loading Telemetry Indicator & Sentinel */}
       {hasMore && (
-        <div style={{ textAlign: 'center', marginTop: 36, marginBottom: 20 }}>
-          <button
-            className="control-pill-btn"
-            onClick={onLoadMore}
-            style={{
-              margin: '0 auto',
-              padding: '12px 28px',
-              fontSize: '1rem',
-              borderColor: 'var(--poke-cyan)',
-              color: 'var(--text-primary)',
-              background: 'rgba(15, 23, 42, 0.8)',
-            }}
-          >
-            <ArrowDownCircle size={20} color="#38bdf8" />
-            <span>
-              Carregar Mais ({pokemonList.length} de {totalFilteredCount})
-            </span>
-          </button>
+        <div ref={sentinelRef} className="auto-scroll-sentinel">
+          <div className="telemetry-radar-loader">
+            <div className="telemetry-loader-top">
+              <Radio size={16} className="radar-ping-icon" />
+              <span className="radar-pulse-dot" />
+              <span className="telemetry-loader-label">
+                RADAR BIOMÉTRICO ATIVO // CARREGAMENTO GRADUAL AUTOMÁTICO
+              </span>
+              <Loader2 size={16} className="telemetry-spinner" />
+            </div>
+
+            <div className="telemetry-progress-wrapper">
+              <div className="telemetry-progress-info">
+                <span>SINCRONIZANDO ESPÉCIMES</span>
+                <span>
+                  {pokemonList.length} de {totalFilteredCount} ({progressPercent}%)
+                </span>
+              </div>
+              <div className="telemetry-progress-track">
+                <div
+                  className="telemetry-progress-fill"
+                  style={{ width: `${progressPercent}%` }}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Completion Indicator when all filtered specimens have been loaded */}
+      {!hasMore && pokemonList.length > 0 && (
+        <div className="auto-scroll-completed">
+          <div className="completed-divider" />
+          <div className="completed-badge">
+            <CheckCircle2 size={16} color="var(--lens-cyan)" />
+            <span>TODOS OS {totalFilteredCount} ESPÉCIMES INDEXADOS NO TERMINAL</span>
+          </div>
+          <div className="completed-divider" />
         </div>
       )}
     </>
