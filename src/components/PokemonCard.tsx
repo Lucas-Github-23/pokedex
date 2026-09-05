@@ -4,12 +4,15 @@ import type { PokemonListItem } from '../types/pokemon';
 import { POKEMON_TYPES } from '../constants/pokemonData';
 import { getJapaneseName } from '../constants/japaneseNames';
 import { TypeIcon } from './TypeIcon';
+import type { SpriteStyle } from '../constants/spriteStyles';
+import { getPokemonSpriteUrl } from '../constants/spriteStyles';
 
 interface PokemonCardProps {
   pokemon: PokemonListItem;
   isFavorite: boolean;
   onToggleFavorite: (pokemon: PokemonListItem, event?: React.MouseEvent) => void;
   onSelect: (id: number) => void;
+  spriteStyle?: SpriteStyle;
 }
 
 export const PokemonCard: React.FC<PokemonCardProps> = ({
@@ -17,11 +20,13 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
   isFavorite,
   onToggleFavorite,
   onSelect,
+  spriteStyle = 'official',
 }) => {
   const formattedId = `№ ${String(pokemon.id).padStart(4, '0')}`;
   const primaryType = pokemon.types?.[0] || 'normal';
   const typeConfig = POKEMON_TYPES[primaryType] || POKEMON_TYPES.normal;
   const japaneseText = pokemon.japaneseName || getJapaneseName(pokemon.id);
+  const spriteUrl = getPokemonSpriteUrl(pokemon.id, spriteStyle, false);
 
   return (
     <div
@@ -71,7 +76,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
       <div className="specimen-sprite-box">
         <div className="specimen-subscreen-bevel" />
         <img
-          src={pokemon.sprite}
+          src={spriteUrl}
           alt={pokemon.name}
           className="specimen-sprite-img"
           loading="lazy"

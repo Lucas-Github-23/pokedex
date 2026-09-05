@@ -11,6 +11,7 @@ import {
 } from './services/pokeapi';
 import type { PokemonListItem, GenerationKey, SortKey } from './types/pokemon';
 import { GENERATIONS } from './constants/pokemonData';
+import type { SpriteStyle } from './constants/spriteStyles';
 
 const PAGE_SIZE = 36;
 
@@ -24,6 +25,7 @@ export const App: React.FC = () => {
   const [selectedGeneration, setSelectedGeneration] = useState<GenerationKey>('all');
   const [selectedType, setSelectedType] = useState<string>('');
   const [sortKey, setSortKey] = useState<SortKey>('id-asc');
+  const [spriteStyle, setSpriteStyle] = useState<SpriteStyle>('official');
 
   // Modal & Drawer states
   const [selectedPokemonId, setSelectedPokemonId] = useState<number | null>(null);
@@ -228,6 +230,8 @@ export const App: React.FC = () => {
             sortKey={sortKey}
             onSortChange={setSortKey}
             resultsCount={filteredAndSortedPokemon.length}
+            selectedSpriteStyle={spriteStyle}
+            onSelectSpriteStyle={setSpriteStyle}
           />
 
           {/* Pokemon Specimen Grid */}
@@ -240,6 +244,7 @@ export const App: React.FC = () => {
             hasMore={hasMore}
             onLoadMore={handleLoadMore}
             totalFilteredCount={filteredAndSortedPokemon.length}
+            spriteStyle={spriteStyle}
           />
         </main>
       </div>
@@ -264,6 +269,7 @@ export const App: React.FC = () => {
         isFavorite={selectedPokemonId ? isFavorite(selectedPokemonId) : false}
         onToggleFavorite={toggleFavorite}
         totalPokemonCount={allPokemon.length || 1025}
+        initialSpriteStyle={spriteStyle}
       />
 
       {/* Favorites Storage Drawer */}

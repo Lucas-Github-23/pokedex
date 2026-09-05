@@ -13,6 +13,7 @@ import {
   Ruler,
   Weight,
   Sparkle,
+  Gamepad2,
 } from 'lucide-react';
 import type {
   PokemonDetail,
@@ -31,6 +32,8 @@ import { getJapaneseName } from '../constants/japaneseNames';
 import { TypeIcon } from './TypeIcon';
 import { EvolutionChain } from './EvolutionChain';
 import { GameLocations } from './GameLocations';
+import type { SpriteStyle } from '../constants/spriteStyles';
+import { SPRITE_STYLES, getPokemonSpriteUrl } from '../constants/spriteStyles';
 
 interface PokemonModalProps {
   pokemonId: number | null;
@@ -39,6 +42,7 @@ interface PokemonModalProps {
   isFavorite: boolean;
   onToggleFavorite: (pokemon: PokemonListItem, event?: React.MouseEvent) => void;
   totalPokemonCount?: number;
+  initialSpriteStyle?: SpriteStyle;
 }
 
 type TabType = 'stats' | 'evolution' | 'locations';
@@ -50,6 +54,7 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
   isFavorite,
   onToggleFavorite,
   totalPokemonCount = 1025,
+  initialSpriteStyle = 'official',
 }) => {
   const [detail, setDetail] = useState<PokemonDetail | null>(null);
   const [flavorText, setFlavorText] = useState<string>('');
@@ -61,8 +66,13 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
   const [activeTab, setActiveTab] = useState<TabType>('stats');
   const [isShiny, setIsShiny] = useState<boolean>(false);
   const [isPlayingCry, setIsPlayingCry] = useState<boolean>(false);
+  const [modalSpriteStyle, setModalSpriteStyle] = useState<SpriteStyle>(initialSpriteStyle);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    setModalSpriteStyle(initialSpriteStyle);
+  }, [initialSpriteStyle, pokemonId]);
 
   useEffect(() => {
     if (!pokemonId) return;
@@ -156,9 +166,7 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
   const heightM = detail ? (detail.height / 10).toFixed(1) : '0.0';
   const weightKg = detail ? (detail.weight / 10).toFixed(1) : '0.0';
 
-  const currentImage = isShiny
-    ? detail?.spriteShiny || detail?.spriteOfficialArtwork
-    : detail?.spriteOfficialArtwork || detail?.spriteDefault;
+  const currentImage = getPokemonSpriteUrl(pokemonId, modalSpriteStyle, isShiny);
 
   return (
     <div className="diagnostic-overlay" onClick={onClose} role="dialog" aria-modal="true">
@@ -320,10 +328,36 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
                     src={currentImage}
                     alt={detail.name}
                     className="holo-sprite-img"
+                    draggable={false}
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = getPokemonSpriteUrl(pokemonId, 'official', isShiny);
+                    }}
                   />
 
                   {/* Vertical Scanner Line */}
                   <div className="holo-laser-scanline" />
+                </div>
+
+                {/* Console Style Toolbar inside Modal */}
+                <div className="modal-console-switch-bar">
+                  <div className="modal-console-bar-header">
+                    <Gamepad2 size={13} color="var(--poke-cyan)" />
+                    <span>ESTILO DE CONSOLE</span>
+                  </div>
+                  <div className="modal-console-chips">
+                    {SPRITE_STYLES.map((st) => (
+                      <button
+                        key={st.id}
+                        type="button"
+                        className={`modal-console-chip ${modalSpriteStyle === st.id ? 'active' : ''}`}
+                        onClick={() => setModalSpriteStyle(st.id)}
+                        title={st.description}
+                      >
+                        <span className="chip-code">{st.tag}</span>
+                        <span className="chip-name">{st.label}</span>
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
                 {/* Primary Elemental Badges */}

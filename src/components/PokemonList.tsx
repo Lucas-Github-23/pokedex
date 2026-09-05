@@ -3,6 +3,8 @@ import type { PokemonListItem } from '../types/pokemon';
 import { PokemonCard } from './PokemonCard';
 import { SearchX, Loader2, CheckCircle2, Radio } from 'lucide-react';
 
+import type { SpriteStyle } from '../constants/spriteStyles';
+
 interface PokemonListProps {
   pokemonList: PokemonListItem[];
   loading: boolean;
@@ -12,6 +14,7 @@ interface PokemonListProps {
   hasMore: boolean;
   onLoadMore: () => void;
   totalFilteredCount: number;
+  spriteStyle?: SpriteStyle;
 }
 
 export const PokemonList: React.FC<PokemonListProps> = ({
@@ -23,6 +26,7 @@ export const PokemonList: React.FC<PokemonListProps> = ({
   hasMore,
   onLoadMore,
   totalFilteredCount,
+  spriteStyle = 'official',
 }) => {
   const sentinelRef = useRef<HTMLDivElement | null>(null);
   const [isAutoLoading, setIsAutoLoading] = useState(false);
@@ -106,6 +110,7 @@ export const PokemonList: React.FC<PokemonListProps> = ({
             isFavorite={isFavorite(pokemon.id)}
             onToggleFavorite={onToggleFavorite}
             onSelect={onSelectPokemon}
+            spriteStyle={spriteStyle}
           />
         ))}
       </div>

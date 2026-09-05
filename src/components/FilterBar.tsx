@@ -1,8 +1,10 @@
 import React, { useRef, useEffect } from 'react';
-import { Crosshair, X, SlidersHorizontal } from 'lucide-react';
+import { Crosshair, X, SlidersHorizontal, Gamepad2 } from 'lucide-react';
 import { POKEMON_TYPES, GENERATIONS } from '../constants/pokemonData';
 import { TypeIcon } from './TypeIcon';
 import type { GenerationKey, SortKey } from '../types/pokemon';
+import type { SpriteStyle } from '../constants/spriteStyles';
+import { SPRITE_STYLES } from '../constants/spriteStyles';
 
 interface FilterBarProps {
   searchTerm: string;
@@ -14,6 +16,8 @@ interface FilterBarProps {
   sortKey: SortKey;
   onSortChange: (sort: SortKey) => void;
   resultsCount: number;
+  selectedSpriteStyle: SpriteStyle;
+  onSelectSpriteStyle: (style: SpriteStyle) => void;
 }
 
 export const FilterBar: React.FC<FilterBarProps> = ({
@@ -26,6 +30,8 @@ export const FilterBar: React.FC<FilterBarProps> = ({
   sortKey,
   onSortChange,
   resultsCount,
+  selectedSpriteStyle,
+  onSelectSpriteStyle,
 }) => {
   const searchInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -128,6 +134,28 @@ export const FilterBar: React.FC<FilterBarProps> = ({
             </button>
           );
         })}
+      </div>
+
+      {/* Console Style Selector Bar */}
+      <div className="console-selector-bar">
+        <div className="console-selector-label">
+          <Gamepad2 size={16} color="var(--poke-cyan)" />
+          <span>ESTILO DE CONSOLE:</span>
+        </div>
+        <div className="console-selector-chips">
+          {SPRITE_STYLES.map((st) => (
+            <button
+              key={st.id}
+              type="button"
+              className={`console-hardware-btn ${selectedSpriteStyle === st.id ? 'active' : ''}`}
+              onClick={() => onSelectSpriteStyle(st.id)}
+              title={st.description}
+            >
+              <span className="console-chip-badge">{st.tag}</span>
+              <span className="console-chip-title">{st.label}</span>
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* HUD Telemetry Readout & Sort */}
