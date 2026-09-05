@@ -187,11 +187,22 @@ export const App: React.FC = () => {
       {/* Recessed High-Tech LCD Screen Enclosure */}
       <div className="pokedex-screen-enclosure">
         <main className="pokedex-lcd-screen">
-          {/* HUD Corner Reticles */}
-          <span className="screen-hud-corner tl" />
-          <span className="screen-hud-corner tr" />
-          <span className="screen-hud-corner bl" />
-          <span className="screen-hud-corner br" />
+          {/* Authentic Pokédex Screen Bezel Corner Screws */}
+          <span className="lcd-screw tl" aria-hidden="true" />
+          <span className="lcd-screw tr" aria-hidden="true" />
+          <span className="lcd-screw bl" aria-hidden="true" />
+          <span className="lcd-screw br" aria-hidden="true" />
+
+          {/* Authentic Top Bezel Sensors & Speaker Slits */}
+          <div className="lcd-hardware-bezel-top" aria-hidden="true">
+            <div className="lcd-bezel-lamps">
+              <span className="lcd-bezel-lamp red" />
+              <span className="lcd-bezel-lamp red" />
+            </div>
+            <div className="lcd-speaker-grille">
+              <span /><span /><span /><span /><span />
+            </div>
+          </div>
 
           {/* LCD Screen Device Banner */}
           <div className="lcd-banner">

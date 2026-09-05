@@ -32,24 +32,17 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
       style={
         {
           '--card-accent-color': typeConfig.color,
-          '--card-glow': typeConfig.glow,
         } as React.CSSProperties
       }
     >
-      {/* HUD Corner Reticles */}
-      <span className="card-bracket tl" />
-      <span className="card-bracket tr" />
-      <span className="card-bracket bl" />
-      <span className="card-bracket br" />
-
-      {/* Japanese Katakana Watermark Background */}
+      {/* Subtle Japanese Specimen Stamp */}
       <div className="card-japanese-watermark" aria-hidden="true">
         {japaneseText}
       </div>
 
       {/* Card Header (Specimen Number + Favorite Button) */}
       <div className="specimen-header">
-        <span className="specimen-id">{formattedId}</span>
+        <span className="specimen-id-badge">{formattedId}</span>
         <button
           className={`card-fav-hardware-btn ${isFavorite ? 'is-fav' : ''}`}
           onClick={(e) => onToggleFavorite(pokemon, e)}
@@ -57,16 +50,16 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
           aria-label={isFavorite ? 'Remover dos favoritos' : 'Favoritar espécime'}
         >
           <Heart
-            size={14}
+            size={13}
             fill={isFavorite ? '#ef4444' : 'none'}
             color={isFavorite ? '#ef4444' : 'currentColor'}
           />
         </button>
       </div>
 
-      {/* Specimen Radar Chamber */}
+      {/* Recessed Sub-Screen / Specimen Viewport */}
       <div className="specimen-sprite-box">
-        <div className="specimen-radar-ring" />
+        <div className="specimen-subscreen-bevel" />
         <img
           src={pokemon.sprite}
           alt={pokemon.name}
@@ -75,36 +68,38 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
         />
       </div>
 
-      {/* Specimen Identification */}
-      <h3 className="specimen-name">{pokemon.name}</h3>
+      {/* Specimen Identification Plate */}
+      <div className="specimen-info-plate">
+        <h3 className="specimen-name">{pokemon.name}</h3>
 
-      {/* Type Badges / Power Cells */}
-      {pokemon.types && pokemon.types.length > 0 ? (
-        <div className="specimen-types">
-          {pokemon.types.map((type) => {
-            const cfg = POKEMON_TYPES[type] || POKEMON_TYPES.normal;
-            return (
-              <span
-                key={type}
-                className="type-metal-badge"
-                style={{ background: cfg.bgGradient }}
-              >
-                <TypeIcon type={type} size={11} color="#ffffff" />
-                <span>{cfg.label}</span>
-              </span>
-            );
-          })}
-        </div>
-      ) : (
-        <div className="specimen-types">
-          <span
-            className="type-metal-badge"
-            style={{ background: typeConfig.bgGradient }}
-          >
-            ANALISAR
-          </span>
-        </div>
-      )}
+        {/* Type Badges / Hardware Chips */}
+        {pokemon.types && pokemon.types.length > 0 ? (
+          <div className="specimen-types">
+            {pokemon.types.map((type) => {
+              const cfg = POKEMON_TYPES[type] || POKEMON_TYPES.normal;
+              return (
+                <span
+                  key={type}
+                  className="type-hardware-chip"
+                  style={{ backgroundColor: cfg.color }}
+                >
+                  <TypeIcon type={type} size={11} color="#ffffff" />
+                  <span>{cfg.label}</span>
+                </span>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="specimen-types">
+            <span
+              className="type-hardware-chip"
+              style={{ backgroundColor: typeConfig.color }}
+            >
+              ANALISAR
+            </span>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
