@@ -815,11 +815,13 @@ body::before {
 /* Terminal Header */
 .terminal-top-header {
   background: linear-gradient(180deg, var(--pokedex-red) 0%, var(--pokedex-red-dark) 100%);
-  padding: 14px 20px;
+  padding: 12px 20px;
   border-bottom: 3px solid var(--pokedex-rim);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
 .terminal-title-bar {
@@ -829,20 +831,96 @@ body::before {
 }
 
 .terminal-lens-mini {
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   background: radial-gradient(circle at 35% 35%, #fff 0%, var(--lens-cyan) 50%, #0369a1 100%);
   border: 2px solid #fff;
   box-shadow: 0 0 10px var(--lens-cyan);
 }
 
-.terminal-heading-text {
+.terminal-id-tag {
   font-family: var(--font-display);
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 700;
   color: #fff;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
+}
+
+.terminal-pokemon-title {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #fff;
+  letter-spacing: 0.02em;
+}
+
+.terminal-japanese-tag {
+  font-family: sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #bae6fd;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Header Top Action Buttons */
+.terminal-top-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.terminal-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(18, 24, 38, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 6px;
+  padding: 6px 12px;
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 0.76rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--bevel-btn);
+  transition: all 0.15s ease;
+  letter-spacing: 0.04em;
+}
+
+.terminal-action-btn:hover {
+  background: rgba(30, 41, 59, 1);
+  border-color: var(--lens-cyan);
+  transform: translateY(-1px);
+}
+
+.terminal-action-btn.active {
+  background: rgba(2, 132, 199, 0.3);
+  border-color: var(--lens-cyan);
+  color: #00f0ff;
+}
+
+.terminal-action-btn.active-shiny {
+  background: rgba(234, 179, 8, 0.25);
+  border-color: #facc15;
+  color: #facc15;
+}
+
+.terminal-action-btn.active-fav {
+  background: rgba(239, 68, 68, 0.25);
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+.terminal-nav-divider {
+  width: 1px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 0 4px;
 }
 
 .terminal-close-btn {
@@ -861,6 +939,10 @@ body::before {
 }
 
 .terminal-close-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.terminal-close-btn.close-x:hover {
   background: #ef4444;
 }
 
@@ -868,14 +950,14 @@ body::before {
 .terminal-screens-layout {
   display: grid;
   grid-template-columns: 360px 1fr;
-  min-height: 520px;
+  min-height: 500px;
 }
 
-/* LEFT SCREEN: BIOMETRIC HOLOGRAPHIC CHAMBER */
+/* LEFT COLUMN: BIOMETRIC HOLOGRAPHIC CHAMBER */
 .holo-chamber {
   background: #080c14;
   border-right: 3px solid var(--pokedex-rim);
-  padding: 24px;
+  padding: 20px 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -884,93 +966,71 @@ body::before {
   overflow: hidden;
 }
 
-/* Sprite Stage in Chamber (100% Mathematically Dead-Centered) */
-.holo-sprite-stage {
+/* Projector Stage with Grounded Circular Pedestal */
+.holo-projector-stage {
   position: relative;
-  width: 250px;
+  width: 100%;
   height: 250px;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 4;
-  margin: 14px auto;
+  margin-bottom: 8px;
 }
 
-/* Target Reticle Centered inside the Stage */
-.holo-target-reticle {
+.holo-ambient-aura {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 230px;
-  height: 230px;
-  border: 2px dashed rgba(56, 189, 248, 0.35);
+  width: 220px;
+  height: 220px;
   border-radius: 50%;
+  background: radial-gradient(circle, var(--modal-glow-color, rgba(0, 240, 255, 0.2)) 0%, transparent 70%);
+  filter: blur(22px);
   pointer-events: none;
-  animation: radarRotate 25s linear infinite;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
-.holo-reticle-inner-ring {
-  width: 170px;
-  height: 170px;
-  border: 1px solid rgba(56, 189, 248, 0.2);
+.holo-pedestal-disc {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 38px;
   border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 50%, rgba(0, 240, 255, 0.35) 0%, rgba(56, 189, 248, 0.1) 60%, transparent 100%);
+  pointer-events: none;
+  z-index: 1;
 }
 
-.holo-reticle-glow {
+.pedestal-ring-outer {
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  background: radial-gradient(circle, var(--modal-glow-color, rgba(0, 240, 255, 0.15)) 0%, transparent 70%);
-  filter: blur(12px);
+  border: 1.5px solid rgba(0, 240, 255, 0.6);
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
 }
 
-.holo-target-cross-h {
+.pedestal-ring-inner {
   position: absolute;
-  top: 50%;
-  left: -20px;
-  right: -20px;
-  height: 1px;
-  background: rgba(56, 189, 248, 0.25);
+  inset: 6px;
+  border-radius: 50%;
+  border: 1px dashed rgba(0, 240, 255, 0.45);
+  animation: radarRotate 20s linear infinite;
 }
 
-.holo-target-cross-v {
+.pedestal-glow {
   position: absolute;
-  left: 50%;
-  top: -20px;
-  bottom: -20px;
-  width: 1px;
-  background: rgba(56, 189, 248, 0.25);
-}
-
-/* Scanning Laser Sweep Line */
-.holo-laser-scanline {
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, transparent, var(--lens-cyan), transparent);
-  box-shadow: 0 0 12px var(--lens-cyan);
-  animation: laserScan 2.5s infinite ease-in-out alternate;
-  pointer-events: none;
-  z-index: 5;
-}
-
-@keyframes laserScan {
-  0% { top: 15%; opacity: 0.8; }
-  100% { top: 85%; opacity: 0.8; }
+  inset: 10px;
+  border-radius: 50%;
+  background: rgba(0, 240, 255, 0.2);
+  filter: blur(4px);
 }
 
 .holo-sprite-img {
   position: relative;
-  z-index: 2;
-  width: 180px;
-  height: 180px;
+  z-index: 3;
+  width: 195px;
+  height: 195px;
   object-fit: contain;
-  filter: drop-shadow(0 14px 22px rgba(0, 0, 0, 0.85));
+  filter: drop-shadow(0 14px 20px rgba(0, 0, 0, 0.85));
   transition: transform 0.3s ease;
 }
 
@@ -978,105 +1038,81 @@ body::before {
   transform: scale(1.08);
 }
 
-.holo-pedestal-base {
+/* Laser Scanning Line across projector */
+.holo-laser-scanline {
   position: absolute;
-  bottom: 8px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 170px;
-  height: 18px;
-  border-radius: 50%;
-  background: radial-gradient(ellipse, rgba(0, 240, 255, 0.35) 0%, rgba(56, 189, 248, 0.1) 60%, transparent 100%);
-  filter: blur(2px);
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--lens-cyan), transparent);
+  box-shadow: 0 0 12px var(--lens-cyan);
+  animation: laserScan 2.5s infinite ease-in-out alternate;
   pointer-events: none;
-  z-index: 1;
+  z-index: 5;
 }
 
-/* Physical Scale Comparison Bar (Human 1.70m vs Pokemon Height) */
-.height-scale-meter {
-  width: 100%;
-  background: rgba(18, 24, 38, 0.8);
-  border: 1px solid rgba(56, 189, 248, 0.25);
-  border-radius: 8px;
-  padding: 10px 14px;
+.modal-elemental-badges {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-family: var(--font-display);
-  font-size: 0.82rem;
-  color: var(--text-secondary);
-  z-index: 4;
+  gap: 8px;
+  justify-content: center;
   margin-bottom: 14px;
 }
 
-.height-scale-meter strong {
-  color: var(--lens-cyan);
-}
-
-/* Chamber Hardware Buttons (Cry Player, Shiny Switch) */
-.chamber-controls-group {
-  display: flex;
+/* Compact Biometrics Grid */
+.biometrics-card {
   width: 100%;
-  gap: 10px;
-  z-index: 4;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  background: rgba(18, 24, 38, 0.7);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  border-radius: 10px;
+  padding: 12px 14px;
 }
 
-.chamber-ctrl-btn {
-  flex: 1;
+.biometric-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.biometric-item.full-width {
+  grid-column: 1 / -1;
+  border-top: 1px dashed rgba(255, 255, 255, 0.1);
+  padding-top: 8px;
+  margin-top: 2px;
+}
+
+.biometric-header {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
-  background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 8px;
-  padding: 10px 12px;
-  color: #fff;
-  font-family: var(--font-display);
-  font-size: 0.82rem;
+  gap: 5px;
+  font-family: var(--font-hud);
+  font-size: 0.72rem;
+  color: var(--text-dim);
   font-weight: 700;
-  cursor: pointer;
-  box-shadow: var(--bevel-btn);
-  transition: all 0.15s ease;
+  letter-spacing: 0.04em;
 }
 
-.chamber-ctrl-btn:hover {
-  background: linear-gradient(180deg, #334155 0%, #1e293b 100%);
+.biometric-val {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
 }
 
-.chamber-ctrl-btn.active {
-  background: linear-gradient(180deg, #0284c7 0%, #0369a1 100%);
-  border-color: var(--lens-cyan);
-  box-shadow: 0 0 12px rgba(0, 240, 255, 0.5), var(--bevel-btn-pressed);
+.biometric-val-abilities {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #e2e8f0;
+  text-transform: capitalize;
 }
 
-/* Audio Waveform Bars */
-.audio-spectrum-bars {
-  display: inline-flex;
-  align-items: center;
-  gap: 2px;
-  height: 12px;
-}
-
-.audio-spectrum-bars span {
-  width: 2px;
-  height: 100%;
-  background: var(--lens-cyan);
-  animation: spectrumBounce 0.5s infinite alternate ease-in-out;
-}
-
-.audio-spectrum-bars span:nth-child(2) { animation-delay: 0.15s; }
-.audio-spectrum-bars span:nth-child(3) { animation-delay: 0.3s; }
-
-@keyframes spectrumBounce {
-  0% { height: 25%; }
-  100% { height: 100%; }
-}
-
-/* RIGHT SCREEN: DIAGNOSTIC READOUT & TELEMETRY */
+/* RIGHT COLUMN: DIAGNOSTIC READOUT & TELEMETRY */
 .diagnostic-readout-panel {
   background: #0d121c;
-  padding: 24px 28px;
+  padding: 20px 24px;
   display: flex;
   flex-direction: column;
 }
@@ -1325,13 +1361,16 @@ body::before {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-wrap: wrap;
-  gap: 12px;
-  padding: 10px 0;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 16px;
+  padding: 16px 4px;
 }
 
 .evo-specimen-node {
-  width: 125px;
+  width: 120px;
+  height: 155px;
+  flex-shrink: 0;
   background: rgba(18, 24, 38, 0.85);
   border: 2px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
@@ -1339,6 +1378,7 @@ body::before {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-between;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);

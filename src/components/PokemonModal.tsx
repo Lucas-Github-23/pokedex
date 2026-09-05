@@ -12,6 +12,7 @@ import {
   Loader2,
   Ruler,
   Weight,
+  Sparkle,
 } from 'lucide-react';
 import type {
   PokemonDetail,
@@ -167,19 +168,87 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
         style={
           {
             '--modal-glow-color': typeConfig.glow,
+            '--modal-type-color': typeConfig.color,
           } as React.CSSProperties
         }
       >
-        {/* Terminal Hardware Top Header */}
+        {/* Top Hardware Header Bar: Identity + Top Controls */}
         <div className="terminal-top-header">
           <div className="terminal-title-bar">
             <div className="terminal-lens-mini" />
-            <span className="terminal-heading-text">
-              TERMINAL DE ANÁLISE BIOMÉTRICA // {formattedId}
-            </span>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <span className="terminal-id-tag">{formattedId}</span>
+                <span className="terminal-pokemon-title">{detail?.name}</span>
+                {japaneseName && (
+                  <span className="terminal-japanese-tag">{japaneseName}</span>
+                )}
+              </div>
+            </div>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          {/* Action Buttons Right at the Top Header */}
+          <div className="terminal-top-actions">
+            {detail && (
+              <>
+                {/* Audio Cry Button */}
+                <button
+                  className={`terminal-action-btn ${isPlayingCry ? 'active' : ''}`}
+                  onClick={handlePlayCry}
+                  title="Tocar som oficial (Cry)"
+                >
+                  <Volume2 size={15} />
+                  <span>SOM</span>
+                  {isPlayingCry && (
+                    <span className="audio-spectrum-bars">
+                      <span />
+                      <span />
+                      <span />
+                    </span>
+                  )}
+                </button>
+
+                {/* Shiny Toggle Button */}
+                <button
+                  className={`terminal-action-btn ${isShiny ? 'active-shiny' : ''}`}
+                  onClick={() => setIsShiny((prev) => !prev)}
+                  title="Alternar modo Shiny"
+                >
+                  <Sparkles size={15} color={isShiny ? '#facc15' : 'currentColor'} />
+                  <span>{isShiny ? 'SHINY' : 'NORMAL'}</span>
+                </button>
+
+                {/* Favorite Button */}
+                <button
+                  className={`terminal-action-btn ${isFavorite ? 'active-fav' : ''}`}
+                  onClick={(e) =>
+                    onToggleFavorite(
+                      {
+                        id: detail.id,
+                        name: detail.name,
+                        url: `https://pokeapi.co/api/v2/pokemon/${detail.id}`,
+                        sprite: detail.spriteOfficialArtwork,
+                        types: detail.types,
+                        japaneseName: japaneseName || getJapaneseName(detail.id),
+                      },
+                      e
+                    )
+                  }
+                  title={isFavorite ? 'Remover dos favoritos' : 'Favoritar'}
+                >
+                  <Heart
+                    size={15}
+                    fill={isFavorite ? '#ef4444' : 'none'}
+                    color={isFavorite ? '#ef4444' : 'currentColor'}
+                  />
+                  <span>FAVORITO</span>
+                </button>
+              </>
+            )}
+
+            {/* Navigation & Close Buttons */}
+            <div className="terminal-nav-divider" />
+
             {pokemonId > 1 && (
               <button
                 className="terminal-close-btn"
@@ -199,10 +268,10 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
               </button>
             )}
             <button
-              className="terminal-close-btn"
+              className="terminal-close-btn close-x"
               onClick={onClose}
-              title="Encerrar Terminal"
-              aria-label="Encerrar Terminal"
+              title="Fechar Terminal"
+              aria-label="Fechar Terminal"
             >
               <X size={16} />
             </button>
@@ -226,123 +295,39 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
               style={{ animation: 'spin 1s linear infinite', marginBottom: 16 }}
             />
             <h3 style={{ fontFamily: 'var(--font-display)', letterSpacing: '0.05em' }}>
-              CALIBRANDO SENSORES ÓPTICOS...
+              CARREGANDO TELEMETRIA DO ESPÉCIME...
             </h3>
-            <p style={{ color: 'var(--text-dim)' }}>
-              Acessando banco de dados regional da Silph Co.
-            </p>
           </div>
         ) : (
           detail && (
             <div className="terminal-screens-layout">
-              {/* LEFT SCREEN: BIOMETRIC HOLOGRAPHIC CHAMBER */}
+              {/* LEFT COLUMN: POKÉMON VISUALIZER & BIOMETRICS */}
               <div className="holo-chamber">
-                {/* Holographic Sprite Stage with Centered Target Reticle & Laser */}
-                <div className="holo-sprite-stage">
-                  {/* Target Reticle & Crosshairs Perfectly Centered */}
-                  <div className="holo-target-reticle">
-                    <div className="holo-target-cross-h" />
-                    <div className="holo-target-cross-v" />
-                    <div className="holo-reticle-inner-ring" />
-                    <div className="holo-reticle-glow" />
+                {/* Holographic Projection Stage */}
+                <div className="holo-projector-stage">
+                  {/* Subtle Ethereal Ambient Glow */}
+                  <div className="holo-ambient-aura" />
+
+                  {/* Grounded Holographic Pedestal Disc at Pokemon Feet */}
+                  <div className="holo-pedestal-disc">
+                    <div className="pedestal-ring-outer" />
+                    <div className="pedestal-ring-inner" />
+                    <div className="pedestal-glow" />
                   </div>
 
-                  {/* Laser Scanning Sweep Line */}
-                  <div className="holo-laser-scanline" />
-
-                  {/* Perfectly Centered Pokemon Sprite */}
+                  {/* The Pokemon Sprite standing on the pedestal */}
                   <img
                     src={currentImage}
                     alt={detail.name}
                     className="holo-sprite-img"
                   />
 
-                  {/* Holographic Pedestal Base */}
-                  <div className="holo-pedestal-base" />
+                  {/* Vertical Scanner Line */}
+                  <div className="holo-laser-scanline" />
                 </div>
 
-                {/* Physical Scale Comparison Bar */}
-                <div className="height-scale-meter">
-                  <span>
-                    <Ruler size={14} style={{ display: 'inline', verticalAlign: '-2px', marginRight: 4 }} />
-                    ALTURA: <strong>{heightM} m</strong>
-                  </span>
-                  <span>
-                    <Weight size={14} style={{ display: 'inline', verticalAlign: '-2px', marginRight: 4 }} />
-                    PESO: <strong>{weightKg} kg</strong>
-                  </span>
-                </div>
-
-                {/* Chamber Hardware Controls */}
-                <div className="chamber-controls-group">
-                  <button
-                    className={`chamber-ctrl-btn ${isPlayingCry ? 'active' : ''}`}
-                    onClick={handlePlayCry}
-                    title="Reproduzir sintetizador de áudio do espécime"
-                  >
-                    <Volume2 size={16} />
-                    <span>RUGIDO</span>
-                    {isPlayingCry && (
-                      <span className="audio-spectrum-bars">
-                        <span />
-                        <span />
-                        <span />
-                      </span>
-                    )}
-                  </button>
-
-                  <button
-                    className={`chamber-ctrl-btn ${isShiny ? 'active' : ''}`}
-                    onClick={() => setIsShiny((prev) => !prev)}
-                    title="Alternar filtro de coloração Shiny"
-                  >
-                    <Sparkles size={14} color={isShiny ? '#facc15' : '#94a3b8'} />
-                    <span>{isShiny ? 'SHINY ATIVO' : 'MODO NORMAL'}</span>
-                  </button>
-
-                  <button
-                    className={`chamber-ctrl-btn ${isFavorite ? 'active' : ''}`}
-                    onClick={(e) =>
-                      onToggleFavorite(
-                        {
-                          id: detail.id,
-                          name: detail.name,
-                          url: `https://pokeapi.co/api/v2/pokemon/${detail.id}`,
-                          sprite: detail.spriteOfficialArtwork,
-                          types: detail.types,
-                          japaneseName: japaneseName || getJapaneseName(detail.id),
-                        },
-                        e
-                      )
-                    }
-                    title={isFavorite ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
-                  >
-                    <Heart
-                      size={16}
-                      fill={isFavorite ? '#ef4444' : 'none'}
-                      color={isFavorite ? '#ef4444' : 'currentColor'}
-                    />
-                  </button>
-                </div>
-              </div>
-
-              {/* RIGHT SCREEN: DIAGNOSTIC READOUT & TELEMETRY */}
-              <div className="diagnostic-readout-panel">
-                {/* Header Banner */}
-                <div className="specimen-id-banner">
-                  <div>
-                    <h2 className="specimen-full-name">{detail.name}</h2>
-                    <div className="specimen-genus-text">{genus}</div>
-                  </div>
-                  {japaneseName && (
-                    <div className="specimen-japanese-badge" title="Nome Oficial Japonês">
-                      {japaneseName}
-                    </div>
-                  )}
-                </div>
-
-                {/* Type Badges with Vector TypeIcon */}
-                <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
+                {/* Primary Elemental Badges */}
+                <div className="modal-elemental-badges">
                   {detail.types.map((type) => {
                     const cfg = POKEMON_TYPES[type] || POKEMON_TYPES.normal;
                     return (
@@ -365,43 +350,56 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
                   })}
                 </div>
 
-                {/* Terminal Entry Readout Box */}
+                {/* Compact Biometrics Grid (Height, Weight, Abilities) */}
+                <div className="biometrics-card">
+                  <div className="biometric-item">
+                    <div className="biometric-header">
+                      <Ruler size={13} color="var(--lens-cyan)" />
+                      <span>ALTURA</span>
+                    </div>
+                    <span className="biometric-val">{heightM} m</span>
+                  </div>
+
+                  <div className="biometric-item">
+                    <div className="biometric-header">
+                      <Weight size={13} color="var(--lens-cyan)" />
+                      <span>PESO</span>
+                    </div>
+                    <span className="biometric-val">{weightKg} kg</span>
+                  </div>
+
+                  <div className="biometric-item full-width">
+                    <div className="biometric-header">
+                      <Sparkle size={13} color="var(--lens-cyan)" />
+                      <span>HABILIDADES</span>
+                    </div>
+                    <span className="biometric-val-abilities">
+                      {detail.abilities.map((a) => a.name.replace(/-/g, ' ')).join(', ')}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* RIGHT COLUMN: DATA READOUT & INTERACTIVE TABS */}
+              <div className="diagnostic-readout-panel">
+                {/* Genus Subtitle */}
+                {genus && <div className="specimen-genus-text">{genus}</div>}
+
+                {/* Terminal Pokédex Entry Text */}
                 {flavorText && (
                   <div className="terminal-entry-box">
                     &gt; {flavorText}
                   </div>
                 )}
 
-                {/* Quick Metrics */}
-                <div className="quick-metrics-row">
-                  <div className="quick-metric-card">
-                    <span className="label">HABILIDADES</span>
-                    <span className="val" style={{ fontSize: '0.9rem', textTransform: 'capitalize' }}>
-                      {detail.abilities.map((a) => a.name.replace(/-/g, ' ')).join(', ')}
-                    </span>
-                  </div>
-                  <div className="quick-metric-card">
-                    <span className="label">BASE STAT TOTAL</span>
-                    <span className="val" style={{ color: 'var(--holo-amber)' }}>
-                      {detail.baseStatTotal}
-                    </span>
-                  </div>
-                  <div className="quick-metric-card">
-                    <span className="label">REGISTRO</span>
-                    <span className="val" style={{ color: 'var(--lens-cyan)' }}>
-                      {formattedId}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Terminal Tabs Row */}
+                {/* Interactive Terminal Navigation Tabs */}
                 <div className="terminal-tabs-row">
                   <button
                     className={`terminal-tab-btn ${activeTab === 'stats' ? 'active' : ''}`}
                     onClick={() => setActiveTab('stats')}
                   >
                     <Activity size={14} style={{ display: 'inline', marginRight: 6, verticalAlign: '-2px' }} />
-                    TELEMETRIA & STATS
+                    ATRIBUTOS & BST
                   </button>
                   <button
                     className={`terminal-tab-btn ${activeTab === 'evolution' ? 'active' : ''}`}
@@ -415,12 +413,12 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
                     onClick={() => setActiveTab('locations')}
                   >
                     <Compass size={14} style={{ display: 'inline', marginRight: 6, verticalAlign: '-2px' }} />
-                    CARTUCHOS & LOCAIS ({locations.length})
+                    JOGOS & LOCAIS ({locations.length})
                   </button>
                 </div>
 
-                {/* Tab Content Panels */}
-                <div style={{ flex: 1, overflowY: 'auto' }}>
+                {/* Tab Content Panel */}
+                <div className="terminal-tab-viewport">
                   {activeTab === 'stats' && (
                     <div className="console-stat-list">
                       {detail.stats.map((st) => {
@@ -430,7 +428,6 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
                         };
                         const pct = Math.min(Math.round((st.base_stat / 255) * 100), 100);
 
-                        // Console color grading
                         const barColor =
                           st.base_stat >= 100
                             ? '#00ff66'
