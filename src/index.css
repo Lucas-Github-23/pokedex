@@ -1173,40 +1173,122 @@ body::before {
   overflow: hidden;
 }
 
-/* Holographic Pedestal Disc at Pokemon Feet */
-.holo-pedestal-disc {
+/* Terrain Simulator Telemetry Badge in Projector Stage */
+.holo-terrain-tag {
   position: absolute;
-  bottom: 22px;
+  top: 9px;
+  left: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(8, 12, 20, 0.82);
+  backdrop-filter: blur(4px);
+  border: 1px solid #1f293d;
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-family: var(--font-hud);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #94a3b8;
+  z-index: 3;
+  pointer-events: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
+}
+
+.holo-terrain-tag .terrain-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  box-shadow: 0 0 6px currentColor;
+}
+
+/* ==========================================================================
+   AUTHENTIC 3D BATTLE PEDESTAL TERRAINS (Water/Sea, Earth/Rock, Grass/Default)
+   ========================================================================== */
+
+.battle-pedestal-container {
+  position: absolute;
+  bottom: 8px;
   left: 50%;
   transform: translateX(-50%);
-  width: 170px;
-  height: 38px;
+  width: 236px;
+  height: 75px;
   pointer-events: none;
   z-index: 1;
+  transition: opacity 0.2s ease;
 }
 
-.pedestal-ring-outer {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  border: 2px solid rgba(56, 189, 248, 0.5);
-  transform: rotateX(65deg);
+.battle-pedestal-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  display: block;
 }
 
-.pedestal-ring-inner {
-  position: absolute;
-  inset: 6px;
-  border-radius: 50%;
-  border: 1px solid rgba(56, 189, 248, 0.3);
-  transform: rotateX(65deg);
+/* Water Concentric Wave Ripples Animation */
+@keyframes waterRippleExpand {
+  0% {
+    transform: scale(0.72);
+    opacity: 0.95;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1.18);
+    opacity: 0;
+  }
 }
 
-.pedestal-glow {
-  position: absolute;
-  inset: 4px;
-  border-radius: 50%;
-  background: radial-gradient(ellipse at center, rgba(56, 189, 248, 0.25) 0%, transparent 70%);
-  transform: rotateX(65deg);
+.water-pulse {
+  transform-origin: 120px 30px;
+  animation: waterRippleExpand 3s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+}
+
+.water-pulse.ripple-1 {
+  animation-delay: 0s;
+}
+
+.water-pulse.ripple-2 {
+  animation-delay: 1s;
+}
+
+.water-pulse.ripple-3 {
+  animation-delay: 2s;
+}
+
+/* Water Caustic Light Shimmer */
+@keyframes waterCausticGlimmer {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.95;
+  }
+}
+
+.water-caustic {
+  animation: waterCausticGlimmer 2.5s ease-in-out infinite;
+}
+
+/* Grass Ambient Meadow Aura */
+@keyframes grassMeadowGlow {
+  0%, 100% {
+    opacity: 0.12;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+
+.pedestal-grass .pedestal-layer-grass ellipse:first-child {
+  animation: grassMeadowGlow 4s ease-in-out infinite;
+}
+
+/* Earth Heavy Grounding Shadow */
+.pedestal-earth {
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.75));
 }
 
 .holo-sprite-img {
