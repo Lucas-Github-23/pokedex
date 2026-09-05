@@ -1539,30 +1539,78 @@ body::before {
    EVOLUTION PIPELINE (MATRIZ EVOLUTIVA HARDWARE)
    ========================================================================== */
 
+.evo-system-wrapper,
 .evolution-pipeline-box {
   background: #090c12;
   border: 1.5px solid #1c2433;
-  border-radius: 4px;
+  border-radius: 6px;
   padding: 14px;
   box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.8);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.evo-system-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  border-bottom: 1.5px solid #1a2230;
+}
+
+.evo-system-title {
+  font-family: var(--font-hud);
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: var(--poke-cyan);
+  letter-spacing: 0.08em;
+}
+
+.evo-system-count {
+  font-family: var(--font-hud);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--text-dim);
+  letter-spacing: 0.04em;
 }
 
 .evo-linear-pipeline {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   overflow-x: auto;
-  padding-bottom: 8px;
+  padding: 4px 2px 8px;
   flex-wrap: nowrap;
+  scrollbar-width: thin;
+  scrollbar-color: #273449 transparent;
+}
+
+.evo-linear-pipeline::-webkit-scrollbar {
+  height: 6px;
+}
+
+.evo-linear-pipeline::-webkit-scrollbar-track {
+  background: rgba(10, 14, 22, 0.6);
+  border-radius: 3px;
+}
+
+.evo-linear-pipeline::-webkit-scrollbar-thumb {
+  background: #273449;
+  border-radius: 3px;
+}
+
+.evo-linear-pipeline::-webkit-scrollbar-thumb:hover {
+  background: #38bdf8;
 }
 
 .evo-specimen-node {
-  width: 120px;
-  height: 155px;
-  background: #121824;
-  border: 1.5px solid #232d3f;
-  border-radius: 4px;
-  padding: 8px;
+  width: 112px;
+  height: 152px;
+  background: #111722;
+  border: 1.5px solid #222c3d;
+  border-radius: 6px;
+  padding: 7px 8px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -1570,87 +1618,189 @@ body::before {
   cursor: pointer;
   flex-shrink: 0;
   transition: all 0.15s ease;
-  box-shadow: 0 2px 0 #0a0d13;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  position: relative;
 }
 
 .evo-specimen-node:hover {
-  background: #1a2233;
-  border-color: #3b4b66;
+  background: #182232;
+  border-color: #38bdf8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
 }
 
+.evo-specimen-node.is-active,
 .evo-specimen-node.is-current {
-  background: #172133;
-  border-color: var(--poke-cyan);
+  background: #152238;
+  border-color: #38bdf8;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.35), inset 0 0 8px rgba(56, 189, 248, 0.1);
 }
 
+.evo-node-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+}
+
+.evo-node-stage-tag,
 .evo-stage-tag {
   font-family: var(--font-hud);
   font-size: 0.65rem;
   font-weight: 700;
-  color: var(--text-dim);
+  color: #94a3b8;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.evo-node-current-tag,
+.evo-current-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background: var(--pokedex-red);
+  color: #ffffff;
+  font-family: var(--font-hud);
+  font-size: 0.62rem;
+  font-weight: 800;
+  padding: 1px 5px;
+  border-radius: 3px;
   letter-spacing: 0.05em;
 }
 
-.evo-current-badge {
-  background: var(--pokedex-red);
-  color: #fff;
-  font-size: 0.65rem;
-  font-weight: 700;
-  padding: 1px 6px;
-  border-radius: 2px;
-}
-
+/* Sprite Container: Fixed dimensions with clipping to prevent any oversized images */
+.evo-node-sprite-box,
 .evo-sprite-slot {
-  width: 65px;
-  height: 65px;
+  width: 100%;
+  height: 72px;
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  overflow: hidden;
+  margin: 3px 0;
+  background: #090d14;
+  border: 1px solid #1a2332;
+  border-radius: 4px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.7);
 }
 
+/* Sprite Image: Strictly contained within 60px x 60px box */
+.evo-node-sprite-img,
 .evo-sprite-thumb {
   width: 60px;
   height: 60px;
+  max-width: 100%;
+  max-height: 100%;
   object-fit: contain;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.6));
+  transition: transform 0.2s ease;
+  display: block;
 }
 
-.evo-specimen-id {
-  font-family: var(--font-display);
-  font-size: 0.72rem;
-  color: var(--text-dim);
+.evo-specimen-node:hover .evo-node-sprite-img,
+.evo-specimen-node:hover .evo-sprite-thumb {
+  transform: scale(1.12);
 }
 
+.evo-node-footer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.evo-node-name,
 .evo-specimen-name {
   font-family: var(--font-display);
   font-size: 0.8rem;
   font-weight: 700;
   text-transform: uppercase;
-  color: #fff;
+  color: #ffffff;
   text-align: center;
+  letter-spacing: 0.03em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
 }
 
+.evo-node-id,
+.evo-specimen-id {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--poke-cyan);
+  letter-spacing: 0.04em;
+}
+
+/* Connector Bridges between stages */
+.evo-connector-bridge,
 .evo-transit-bridge {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  gap: 5px;
+  flex-shrink: 0;
+  padding: 0 4px;
+}
+
+.evo-bridge-line {
+  width: 20px;
+  height: 2px;
+  background: linear-gradient(90deg, #1e293b 0%, #38bdf8 50%, #1e293b 100%);
+}
+
+.evo-bridge-badge,
+.evo-transit-condition {
+  display: inline-flex;
+  align-items: center;
   gap: 4px;
+  font-family: var(--font-hud);
+  font-size: 0.67rem;
+  font-weight: 700;
+  color: var(--poke-cyan);
+  background: #0d131d;
+  border: 1px solid #1f2a3c;
+  padding: 3px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.evo-bridge-icon,
+.evo-transit-arrow {
+  color: var(--poke-cyan);
   flex-shrink: 0;
 }
 
-.evo-transit-condition {
-  font-family: var(--font-display);
-  font-size: 0.7rem;
-  font-weight: 700;
-  color: var(--poke-cyan);
-  background: #141b27;
-  border: 1px solid #253145;
-  padding: 2px 6px;
-  border-radius: 3px;
-  white-space: nowrap;
+/* Empty State Cards */
+.evo-empty-card {
+  background: #090d14;
+  border: 1.5px dashed #1e2736;
+  border-radius: 6px;
+  padding: 24px;
+  text-align: center;
+  color: var(--text-dim);
 }
 
-.evo-transit-arrow {
-  color: var(--text-dim);
+.evo-empty-title {
+  display: block;
+  font-family: var(--font-hud);
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: var(--text-secondary);
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+}
+
+.evo-empty-card p {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  margin: 0;
 }
 
 /* ==========================================================================
