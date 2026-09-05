@@ -27,6 +27,7 @@ import {
 } from '../services/pokeapi';
 import { POKEMON_TYPES, STAT_NAMES } from '../constants/pokemonData';
 import { getJapaneseName } from '../constants/japaneseNames';
+import { TypeIcon } from './TypeIcon';
 import { EvolutionChain } from './EvolutionChain';
 import { GameLocations } from './GameLocations';
 
@@ -236,22 +237,28 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
             <div className="terminal-screens-layout">
               {/* LEFT SCREEN: BIOMETRIC HOLOGRAPHIC CHAMBER */}
               <div className="holo-chamber">
-                {/* Target Reticle & Crosshairs */}
-                <div className="holo-target-reticle">
-                  <div className="holo-target-cross-h" />
-                  <div className="holo-target-cross-v" />
-                </div>
-
-                {/* Laser Scanning Line */}
-                <div className="holo-laser-scanline" />
-
-                {/* Holographic Sprite Stage */}
+                {/* Holographic Sprite Stage with Centered Target Reticle & Laser */}
                 <div className="holo-sprite-stage">
+                  {/* Target Reticle & Crosshairs Perfectly Centered */}
+                  <div className="holo-target-reticle">
+                    <div className="holo-target-cross-h" />
+                    <div className="holo-target-cross-v" />
+                    <div className="holo-reticle-inner-ring" />
+                    <div className="holo-reticle-glow" />
+                  </div>
+
+                  {/* Laser Scanning Sweep Line */}
+                  <div className="holo-laser-scanline" />
+
+                  {/* Perfectly Centered Pokemon Sprite */}
                   <img
                     src={currentImage}
                     alt={detail.name}
                     className="holo-sprite-img"
                   />
+
+                  {/* Holographic Pedestal Base */}
+                  <div className="holo-pedestal-base" />
                 </div>
 
                 {/* Physical Scale Comparison Bar */}
@@ -289,8 +296,8 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
                     onClick={() => setIsShiny((prev) => !prev)}
                     title="Alternar filtro de coloração Shiny"
                   >
-                    <Sparkles size={16} />
-                    <span>{isShiny ? 'SHINY ✨' : 'NORMAL'}</span>
+                    <Sparkles size={14} color={isShiny ? '#facc15' : '#94a3b8'} />
+                    <span>{isShiny ? 'SHINY ATIVO' : 'MODO NORMAL'}</span>
                   </button>
 
                   <button
@@ -334,7 +341,7 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
                   )}
                 </div>
 
-                {/* Type Badges */}
+                {/* Type Badges with Vector TypeIcon */}
                 <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
                   {detail.types.map((type) => {
                     const cfg = POKEMON_TYPES[type] || POKEMON_TYPES.normal;
@@ -342,9 +349,17 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
                       <span
                         key={type}
                         className="type-metal-badge"
-                        style={{ background: cfg.bgGradient, padding: '4px 10px', fontSize: '0.78rem' }}
+                        style={{
+                          background: cfg.bgGradient,
+                          padding: '5px 12px',
+                          fontSize: '0.8rem',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: 6,
+                        }}
                       >
-                        {cfg.label}
+                        <TypeIcon type={type} size={14} color="#ffffff" />
+                        <span>{cfg.label}</span>
                       </span>
                     );
                   })}

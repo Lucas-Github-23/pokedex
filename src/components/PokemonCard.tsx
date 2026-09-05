@@ -3,6 +3,7 @@ import { Heart } from 'lucide-react';
 import type { PokemonListItem } from '../types/pokemon';
 import { POKEMON_TYPES } from '../constants/pokemonData';
 import { getJapaneseName } from '../constants/japaneseNames';
+import { TypeIcon } from './TypeIcon';
 
 interface PokemonCardProps {
   pokemon: PokemonListItem;
@@ -88,7 +89,8 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
                 className="type-metal-badge"
                 style={{ background: cfg.bgGradient }}
               >
-                {cfg.label}
+                <TypeIcon type={type} size={11} color="#ffffff" />
+                <span>{cfg.label}</span>
               </span>
             );
           })}

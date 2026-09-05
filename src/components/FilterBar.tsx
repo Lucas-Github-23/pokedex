@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { Crosshair, X, SlidersHorizontal } from 'lucide-react';
 import { POKEMON_TYPES, GENERATIONS } from '../constants/pokemonData';
+import { TypeIcon } from './TypeIcon';
 import type { GenerationKey, SortKey } from '../types/pokemon';
 
 interface FilterBarProps {
@@ -118,9 +119,10 @@ export const FilterBar: React.FC<FilterBarProps> = ({
                   : undefined
               }
             >
-              <span
-                className="type-cell-dot"
-                style={{ backgroundColor: type.color }}
+              <TypeIcon
+                type={type.name}
+                size={14}
+                color={isSelected ? '#ffffff' : type.color}
               />
               {type.label.toUpperCase()}
             </button>

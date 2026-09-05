@@ -1,7 +1,7 @@
 import React from 'react';
 import type { GameLocations as IGameLocations } from '../types/pokemon';
 import { GAME_VERSION_COLORS } from '../constants/pokemonData';
-import { Compass } from 'lucide-react';
+import { Compass, Gamepad2 } from 'lucide-react';
 
 interface GameLocationsProps {
   locations: IGameLocations[];
@@ -38,7 +38,8 @@ export const GameLocations: React.FC<GameLocationsProps> = ({ locations }) => {
             }}
           >
             <div className="game-name-header">
-              <span>🎮 Pokémon {item.game}</span>
+              <Gamepad2 size={16} style={{ display: 'inline', verticalAlign: '-3px', marginRight: 6 }} />
+              <span>Pokémon {item.game}</span>
             </div>
             <div className="game-areas-list">
               <strong>Locais: </strong>

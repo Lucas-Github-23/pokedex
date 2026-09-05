@@ -884,78 +884,112 @@ body::before {
   overflow: hidden;
 }
 
-/* Target Reticle Background */
+/* Sprite Stage in Chamber (100% Mathematically Dead-Centered) */
+.holo-sprite-stage {
+  position: relative;
+  width: 250px;
+  height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 4;
+  margin: 14px auto;
+}
+
+/* Target Reticle Centered inside the Stage */
 .holo-target-reticle {
   position: absolute;
-  top: 42%;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 240px;
-  height: 240px;
-  border: 1px dashed rgba(56, 189, 248, 0.3);
+  width: 230px;
+  height: 230px;
+  border: 2px dashed rgba(56, 189, 248, 0.35);
   border-radius: 50%;
   pointer-events: none;
+  animation: radarRotate 25s linear infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.holo-reticle-inner-ring {
+  width: 170px;
+  height: 170px;
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  border-radius: 50%;
+}
+
+.holo-reticle-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--modal-glow-color, rgba(0, 240, 255, 0.15)) 0%, transparent 70%);
+  filter: blur(12px);
 }
 
 .holo-target-cross-h {
   position: absolute;
   top: 50%;
-  left: 0;
-  right: 0;
+  left: -20px;
+  right: -20px;
   height: 1px;
-  background: rgba(56, 189, 248, 0.2);
+  background: rgba(56, 189, 248, 0.25);
 }
 
 .holo-target-cross-v {
   position: absolute;
   left: 50%;
-  top: 0;
-  bottom: 0;
+  top: -20px;
+  bottom: -20px;
   width: 1px;
-  background: rgba(56, 189, 248, 0.2);
+  background: rgba(56, 189, 248, 0.25);
 }
 
-/* Scanning Laser Sweep */
+/* Scanning Laser Sweep Line */
 .holo-laser-scanline {
   position: absolute;
-  top: 0;
   left: 0;
   right: 0;
   height: 3px;
   background: linear-gradient(90deg, transparent, var(--lens-cyan), transparent);
   box-shadow: 0 0 12px var(--lens-cyan);
-  animation: laserScan 3s infinite ease-in-out alternate;
+  animation: laserScan 2.5s infinite ease-in-out alternate;
   pointer-events: none;
   z-index: 5;
 }
 
 @keyframes laserScan {
   0% { top: 15%; opacity: 0.8; }
-  100% { top: 70%; opacity: 0.8; }
-}
-
-/* Sprite Image in Chamber */
-.holo-sprite-stage {
-  position: relative;
-  width: 220px;
-  height: 220px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 4;
-  margin: 10px 0;
+  100% { top: 85%; opacity: 0.8; }
 }
 
 .holo-sprite-img {
-  width: 200px;
-  height: 200px;
+  position: relative;
+  z-index: 2;
+  width: 180px;
+  height: 180px;
   object-fit: contain;
-  filter: drop-shadow(0 14px 20px rgba(0, 0, 0, 0.8));
+  filter: drop-shadow(0 14px 22px rgba(0, 0, 0, 0.85));
   transition: transform 0.3s ease;
 }
 
 .holo-sprite-img:hover {
   transform: scale(1.08);
+}
+
+.holo-pedestal-base {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 170px;
+  height: 18px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(0, 240, 255, 0.35) 0%, rgba(56, 189, 248, 0.1) 60%, transparent 100%);
+  filter: blur(2px);
+  pointer-events: none;
+  z-index: 1;
 }
 
 /* Physical Scale Comparison Bar (Human 1.70m vs Pokemon Height) */
@@ -1254,6 +1288,192 @@ body::before {
 
 .hardware-footer a:hover {
   text-decoration: underline;
+}
+
+/* ==========================================================================
+   COMPACT & INTUITIVE EVOLUTION MATRIX
+   ========================================================================== */
+
+.evo-system-wrapper {
+  padding: 12px 4px;
+}
+
+.evo-system-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+  font-family: var(--font-display);
+}
+
+.evo-system-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.06em;
+}
+
+.evo-system-count {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
+}
+
+.evo-linear-pipeline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 10px 0;
+}
+
+.evo-specimen-node {
+  width: 125px;
+  background: rgba(18, 24, 38, 0.85);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 10px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+
+.evo-specimen-node:hover {
+  transform: translateY(-4px);
+  border-color: var(--lens-cyan);
+  background: rgba(26, 35, 54, 0.95);
+  box-shadow: 0 8px 20px rgba(0, 240, 255, 0.25);
+}
+
+.evo-specimen-node.is-active {
+  border-color: var(--lens-cyan);
+  background: rgba(2, 132, 199, 0.22);
+  box-shadow: 0 0 16px rgba(0, 240, 255, 0.4);
+}
+
+.evo-node-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  margin-bottom: 4px;
+}
+
+.evo-node-stage-tag {
+  color: var(--text-dim);
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 0.65rem;
+}
+
+.evo-node-current-tag {
+  color: var(--lens-cyan);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 0.65rem;
+}
+
+.evo-node-sprite-box {
+  width: 72px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 4px 0 6px;
+}
+
+.evo-node-sprite-img {
+  width: 68px;
+  height: 68px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.6));
+  transition: transform 0.2s;
+}
+
+.evo-specimen-node:hover .evo-node-sprite-img {
+  transform: scale(1.12);
+}
+
+.evo-node-footer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: var(--font-display);
+}
+
+.evo-node-name {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #fff;
+  text-transform: capitalize;
+}
+
+.evo-node-id {
+  font-size: 0.7rem;
+  color: var(--lens-cyan);
+}
+
+.evo-connector-bridge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 80px;
+}
+
+.evo-bridge-line {
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--lens-cyan), transparent);
+}
+
+.evo-bridge-badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(0, 240, 255, 0.12);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--lens-cyan);
+  white-space: nowrap;
+}
+
+.evo-bridge-icon {
+  color: var(--lens-cyan);
+}
+
+.evo-empty-card {
+  text-align: center;
+  padding: 40px 20px;
+  background: rgba(18, 24, 38, 0.5);
+  border: 1px dashed rgba(56, 189, 248, 0.2);
+  border-radius: 12px;
+  font-family: var(--font-display);
+}
+
+.evo-empty-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--lens-cyan);
+  letter-spacing: 0.06em;
+  display: block;
+  margin-bottom: 8px;
 }
 
 /* ==========================================================================
