@@ -78,7 +78,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
         <img
           src={spriteUrl}
           alt={pokemon.name}
-          className="specimen-sprite-img"
+          className={`specimen-sprite-img ${spriteStyle !== 'official' ? 'pixelated-sprite' : ''}`}
           loading="lazy"
           draggable={false}
         />

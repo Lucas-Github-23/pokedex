@@ -899,6 +899,14 @@ body::before {
   z-index: 2;
 }
 
+/* Pixel-perfect razor-sharp rendering for retro consoles (GBA, GBC, GB, DS) */
+.pixelated-sprite,
+.specimen-sprite-img.pixelated-sprite {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
 .specimen-card:hover .specimen-sprite-img {
   transform: scale(1.08);
 }
@@ -1198,6 +1206,14 @@ body::before {
   object-fit: contain;
   filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.7));
   z-index: 2;
+}
+
+.holo-sprite-img.pixelated-sprite {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  max-width: 160px;
+  max-height: 160px;
 }
 
 /* Modal Elemental Badges */

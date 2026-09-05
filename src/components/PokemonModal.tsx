@@ -327,7 +327,7 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
                   <img
                     src={currentImage}
                     alt={detail.name}
-                    className="holo-sprite-img"
+                    className={`holo-sprite-img ${modalSpriteStyle !== 'official' ? 'pixelated-sprite' : ''}`}
                     draggable={false}
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = getPokemonSpriteUrl(pokemonId, 'official', isShiny);
