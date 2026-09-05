@@ -907,6 +907,15 @@ body::before {
   image-rendering: crisp-edges;
 }
 
+/* Rounded borders and frame for Game Boy & Game Boy Color sprites with opaque white background */
+.specimen-sprite-img.retro-gb-sprite {
+  border-radius: 8px;
+  background-color: #ffffff;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.55);
+  filter: none;
+}
+
 .specimen-card:hover .specimen-sprite-img {
   transform: scale(1.08);
 }
@@ -1214,6 +1223,15 @@ body::before {
   image-rendering: crisp-edges;
   max-width: 160px;
   max-height: 160px;
+}
+
+.holo-sprite-img.retro-gb-sprite {
+  border-radius: 12px;
+  background-color: #ffffff;
+  border: 3px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.75), 0 0 12px rgba(255, 255, 255, 0.15);
+  filter: none;
+  padding: 2px;
 }
 
 /* Modal Elemental Badges */

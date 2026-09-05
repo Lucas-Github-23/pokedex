@@ -139,3 +139,15 @@ export function getPokemonSpriteUrl(
 
   return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
 }
+
+/**
+ * Checks if the Pokemon is displaying an authentic Game Boy Classic or Game Boy Color sprite
+ * with an opaque white bounding box that requires clean rounded borders.
+ * Returns false if the Pokemon is from a later generation and falls back to a transparent sprite.
+ */
+export function isRetroGBSprite(id: number, style: SpriteStyle): boolean {
+  if (style === 'gb') return id <= 151;
+  if (style === 'gbc') return id <= 251;
+  return false;
+}
+

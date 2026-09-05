@@ -5,7 +5,7 @@ import { POKEMON_TYPES } from '../constants/pokemonData';
 import { getJapaneseName } from '../constants/japaneseNames';
 import { TypeIcon } from './TypeIcon';
 import type { SpriteStyle } from '../constants/spriteStyles';
-import { getPokemonSpriteUrl } from '../constants/spriteStyles';
+import { getPokemonSpriteUrl, isRetroGBSprite } from '../constants/spriteStyles';
 
 interface PokemonCardProps {
   pokemon: PokemonListItem;
@@ -27,6 +27,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
   const typeConfig = POKEMON_TYPES[primaryType] || POKEMON_TYPES.normal;
   const japaneseText = pokemon.japaneseName || getJapaneseName(pokemon.id);
   const spriteUrl = getPokemonSpriteUrl(pokemon.id, spriteStyle, false);
+  const isRetroGB = isRetroGBSprite(pokemon.id, spriteStyle);
 
   return (
     <div
@@ -78,7 +79,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
         <img
           src={spriteUrl}
           alt={pokemon.name}
-          className={`specimen-sprite-img ${spriteStyle !== 'official' ? 'pixelated-sprite' : ''}`}
+          className={`specimen-sprite-img ${spriteStyle !== 'official' ? 'pixelated-sprite' : ''} ${isRetroGB ? 'retro-gb-sprite' : ''}`}
           loading="lazy"
           draggable={false}
         />
