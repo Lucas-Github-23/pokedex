@@ -32,7 +32,6 @@ import { getJapaneseName } from '../constants/japaneseNames';
 import { TypeIcon } from './TypeIcon';
 import { EvolutionChain } from './EvolutionChain';
 import { GameLocations } from './GameLocations';
-import { BattlePedestal, getPokemonTerrain, getTerrainInfo } from './BattlePedestal';
 import type { SpriteStyle } from '../constants/spriteStyles';
 import { SPRITE_STYLES, getPokemonSpriteUrl } from '../constants/spriteStyles';
 
@@ -317,24 +316,10 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
                   {/* Subtle Ethereal Ambient Glow */}
                   <div className="holo-ambient-aura" />
 
-                  {/* Terrain Simulator Telemetry Badge */}
-                  <div
-                    className="holo-terrain-tag"
-                    title={`Ambiente de batalha simulado: ${getTerrainInfo(getPokemonTerrain(detail.types)).name}`}
-                  >
-                    <span
-                      className="terrain-dot"
-                      style={{
-                        backgroundColor: getTerrainInfo(getPokemonTerrain(detail.types)).color,
-                      }}
-                    />
-                    <span>{getTerrainInfo(getPokemonTerrain(detail.types)).badge}</span>
-                  </div>
+                  {/* Clean Specimen Floor Contact Shadow */}
+                  <div className="holo-floor-shadow" />
 
-                  {/* Authentic Type-Adapted 3D Battle Pedestal (Water -> Sea, Ground/Rock -> Earth, Others -> Grass) */}
-                  <BattlePedestal types={detail.types} />
-
-                  {/* The Pokemon Sprite standing on the pedestal */}
+                  {/* The Pokemon Sprite */}
                   <img
                     src={currentImage}
                     alt={detail.name}

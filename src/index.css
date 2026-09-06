@@ -923,15 +923,6 @@ body::before {
   image-rendering: crisp-edges;
 }
 
-/* Rounded borders and frame for Game Boy & Game Boy Color sprites with opaque white background */
-.specimen-sprite-img.retro-gb-sprite {
-  border-radius: 8px;
-  background-color: #ffffff;
-  border: 2px solid rgba(255, 255, 255, 0.35);
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.55);
-  filter: none;
-}
-
 .specimen-card:hover .specimen-sprite-img {
   transform: scale(1.08);
 }
@@ -1201,122 +1192,17 @@ body::before {
   overflow: hidden;
 }
 
-/* Terrain Simulator Telemetry Badge in Projector Stage */
-.holo-terrain-tag {
+/* Clean Holographic Specimen Ground Contact Shadow */
+.holo-floor-shadow {
   position: absolute;
-  top: 9px;
-  left: 10px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(8, 12, 20, 0.82);
-  backdrop-filter: blur(4px);
-  border: 1px solid #1f293d;
-  border-radius: 4px;
-  padding: 3px 8px;
-  font-family: var(--font-hud);
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  color: #94a3b8;
-  z-index: 3;
-  pointer-events: none;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
-}
-
-.holo-terrain-tag .terrain-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  box-shadow: 0 0 6px currentColor;
-}
-
-/* ==========================================================================
-   AUTHENTIC 3D BATTLE PEDESTAL TERRAINS (Water/Sea, Earth/Rock, Grass/Default)
-   ========================================================================== */
-
-.battle-pedestal-container {
-  position: absolute;
-  bottom: 8px;
+  bottom: 22px;
   left: 50%;
   transform: translateX(-50%);
-  width: 236px;
-  height: 75px;
+  width: 140px;
+  height: 18px;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0.25) 50%, transparent 70%);
   pointer-events: none;
   z-index: 1;
-  transition: opacity 0.2s ease;
-}
-
-.battle-pedestal-svg {
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-  display: block;
-}
-
-/* Water Concentric Wave Ripples Animation */
-@keyframes waterRippleExpand {
-  0% {
-    transform: scale(0.72);
-    opacity: 0.95;
-  }
-  50% {
-    opacity: 0.5;
-  }
-  100% {
-    transform: scale(1.18);
-    opacity: 0;
-  }
-}
-
-.water-pulse {
-  transform-origin: 120px 30px;
-  animation: waterRippleExpand 3s cubic-bezier(0.25, 1, 0.5, 1) infinite;
-}
-
-.water-pulse.ripple-1 {
-  animation-delay: 0s;
-}
-
-.water-pulse.ripple-2 {
-  animation-delay: 1s;
-}
-
-.water-pulse.ripple-3 {
-  animation-delay: 2s;
-}
-
-/* Water Caustic Light Shimmer */
-@keyframes waterCausticGlimmer {
-  0%, 100% {
-    opacity: 0.5;
-  }
-  50% {
-    opacity: 0.95;
-  }
-}
-
-.water-caustic {
-  animation: waterCausticGlimmer 2.5s ease-in-out infinite;
-}
-
-/* Grass Ambient Meadow Aura */
-@keyframes grassMeadowGlow {
-  0%, 100% {
-    opacity: 0.12;
-  }
-  50% {
-    opacity: 0.25;
-  }
-}
-
-.pedestal-grass .pedestal-layer-grass ellipse:first-child {
-  animation: grassMeadowGlow 4s ease-in-out infinite;
-}
-
-/* Earth Heavy Grounding Shadow */
-.pedestal-earth {
-  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.75));
 }
 
 .holo-sprite-img {
@@ -1333,15 +1219,6 @@ body::before {
   image-rendering: crisp-edges;
   max-width: 160px;
   max-height: 160px;
-}
-
-.holo-sprite-img.retro-gb-sprite {
-  border-radius: 12px;
-  background-color: #ffffff;
-  border: 3px solid rgba(255, 255, 255, 0.4);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.75), 0 0 12px rgba(255, 255, 255, 0.15);
-  filter: none;
-  padding: 2px;
 }
 
 /* Modal Elemental Badges */
