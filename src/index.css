@@ -824,21 +824,39 @@ body::before {
   box-shadow: 0 5px 0 #0a0d13, 0 8px 16px rgba(0, 0, 0, 0.6);
 }
 
-/* Japanese Katakana Watermark Stamp */
-.card-japanese-watermark {
+/* Japanese Specimen Badge in Card Header */
+.specimen-japanese-badge {
+  font-family: sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #fef08a;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(254, 240, 138, 0.25);
+  padding: 1px 6px;
+  border-radius: 3px;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  max-width: 95px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Japanese Specimen Watermark Inside Sub-Screen */
+.specimen-box-watermark {
   position: absolute;
-  top: 52%;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   font-family: sans-serif;
-  font-size: 3.5rem;
+  font-size: 2.3rem;
   font-weight: 900;
-  color: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.07);
   user-select: none;
   pointer-events: none;
   white-space: nowrap;
-  letter-spacing: -0.05em;
-  z-index: 0;
+  letter-spacing: 0.02em;
+  z-index: 1;
 }
 
 /* Card Header */

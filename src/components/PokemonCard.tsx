@@ -47,14 +47,14 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
         } as React.CSSProperties
       }
     >
-      {/* Subtle Japanese Specimen Stamp */}
-      <div className="card-japanese-watermark" aria-hidden="true">
-        {japaneseText}
-      </div>
-
-      {/* Card Header (Specimen Number + Favorite Button) */}
+      {/* Card Header (Specimen Number + Japanese Badge + Favorite Button) */}
       <div className="specimen-header">
         <span className="specimen-id-badge">{formattedId}</span>
+        {japaneseText && (
+          <span className="specimen-japanese-badge" title={`Nome em japonês: ${japaneseText}`}>
+            {japaneseText}
+          </span>
+        )}
         <button
           className={`card-fav-hardware-btn ${isFavorite ? 'is-fav' : ''}`}
           onClick={(e) => {
@@ -75,6 +75,11 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
       {/* Recessed Sub-Screen / Specimen Viewport */}
       <div className="specimen-sprite-box">
         <div className="specimen-subscreen-bevel" />
+        {japaneseText && (
+          <div className="specimen-box-watermark" aria-hidden="true">
+            {japaneseText}
+          </div>
+        )}
         <img
           src={spriteUrl}
           alt={pokemon.name}
