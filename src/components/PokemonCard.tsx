@@ -2,6 +2,7 @@ import React from 'react';
 import { Heart } from 'lucide-react';
 import type { PokemonListItem } from '../types/pokemon';
 import { POKEMON_TYPES } from '../constants/pokemonData';
+import { POKEMON_TYPES_MAP } from '../constants/pokemonTypes';
 import { getJapaneseName } from '../constants/japaneseNames';
 import { TypeIcon } from './TypeIcon';
 import type { SpriteStyle } from '../constants/spriteStyles';
@@ -23,7 +24,11 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
   spriteStyle = 'official',
 }) => {
   const formattedId = `№ ${String(pokemon.id).padStart(4, '0')}`;
-  const primaryType = pokemon.types?.[0] || 'normal';
+  const resolvedTypes =
+    pokemon.types && pokemon.types.length > 0
+      ? pokemon.types
+      : POKEMON_TYPES_MAP[pokemon.id] || ['normal'];
+  const primaryType = resolvedTypes[0] || 'normal';
   const typeConfig = POKEMON_TYPES[primaryType] || POKEMON_TYPES.normal;
   const japaneseText = pokemon.japaneseName || getJapaneseName(pokemon.id);
   const spriteUrl = getPokemonSpriteUrl(pokemon.id, spriteStyle, false);
@@ -94,32 +99,21 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
         <h3 className="specimen-name">{pokemon.name}</h3>
 
         {/* Type Badges / Hardware Chips */}
-        {pokemon.types && pokemon.types.length > 0 ? (
-          <div className="specimen-types">
-            {pokemon.types.map((type) => {
-              const cfg = POKEMON_TYPES[type] || POKEMON_TYPES.normal;
-              return (
-                <span
-                  key={type}
-                  className="type-hardware-chip"
-                  style={{ backgroundColor: cfg.color }}
-                >
-                  <TypeIcon type={type} size={11} color="#ffffff" />
-                  <span>{cfg.label}</span>
-                </span>
-              );
-            })}
-          </div>
-        ) : (
-          <div className="specimen-types">
-            <span
-              className="type-hardware-chip"
-              style={{ backgroundColor: typeConfig.color }}
-            >
-              ANALISAR
-            </span>
-          </div>
-        )}
+        <div className="specimen-types">
+          {resolvedTypes.map((type) => {
+            const cfg = POKEMON_TYPES[type] || POKEMON_TYPES.normal;
+            return (
+              <span
+                key={type}
+                className="type-hardware-chip"
+                style={{ backgroundColor: cfg.color }}
+              >
+                <TypeIcon type={type} size={11} color="#ffffff" />
+                <span>{cfg.label}</span>
+              </span>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

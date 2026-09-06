@@ -5,6 +5,7 @@ import type {
   GameLocations,
 } from '../types/pokemon';
 import { GAME_VERSION_COLORS } from '../constants/pokemonData';
+import { POKEMON_TYPES_MAP } from '../constants/pokemonTypes';
 
 const BASE_URL = 'https://pokeapi.co/api/v2';
 
@@ -53,6 +54,7 @@ export async function fetchAllPokemonList(): Promise<PokemonListItem[]> {
         id,
         url: entry.url,
         sprite: getOfficialArtworkUrl(id),
+        types: POKEMON_TYPES_MAP[id] || [],
       };
     });
 
@@ -286,6 +288,7 @@ export async function fetchPokemonByType(type: string): Promise<PokemonListItem[
         id,
         url: entry.pokemon.url,
         sprite: getOfficialArtworkUrl(id),
+        types: POKEMON_TYPES_MAP[id] || [type.toLowerCase()],
       };
     });
   } catch (error) {
