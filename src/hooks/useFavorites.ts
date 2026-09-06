@@ -1,14 +1,43 @@
 import { useState, useEffect, useCallback } from 'react';
 import confetti from 'canvas-confetti';
 import type { PokemonListItem } from '../types/pokemon';
+import { POKEMON_TYPES_MAP } from '../constants/pokemonTypes';
 
 const STORAGE_KEY = 'pokedex_favorites_v1';
+
+function normalizeFavoriteItem(item: any): PokemonListItem | null {
+  if (!item || typeof item.id !== 'number' || isNaN(item.id)) {
+    return null;
+  }
+  const id = item.id;
+  const name = typeof item.name === 'string' && item.name.trim() ? item.name.trim() : `pokemon-${id}`;
+  const sprite =
+    typeof item.sprite === 'string' && item.sprite
+      ? item.sprite
+      : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
+  const types =
+    Array.isArray(item.types) && item.types.length > 0
+      ? item.types
+      : POKEMON_TYPES_MAP[id] || ['normal'];
+
+  return {
+    id,
+    name,
+    url: item.url || `https://pokeapi.co/api/v2/pokemon/${id}`,
+    sprite,
+    types,
+    japaneseName: item.japaneseName,
+  };
+}
 
 export function useFavorites() {
   const [favorites, setFavorites] = useState<PokemonListItem[]>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
-      return saved ? JSON.parse(saved) : [];
+      if (!saved) return [];
+      const parsed = JSON.parse(saved);
+      if (!Array.isArray(parsed)) return [];
+      return parsed.map(normalizeFavoriteItem).filter((p): p is PokemonListItem => p !== null);
     } catch {
       return [];
     }
@@ -31,6 +60,7 @@ export function useFavorites() {
     (pokemon: PokemonListItem, event?: React.MouseEvent) => {
       if (event) {
         event.stopPropagation();
+        event.preventDefault();
       }
 
       setFavorites((prev) => {
@@ -53,17 +83,25 @@ export function useFavorites() {
           } catch {
             // Ignore confetti errors
           }
-          return [...prev, pokemon];
+
+          const normalized = normalizeFavoriteItem(pokemon) || pokemon;
+          return [...prev, normalized];
         }
       });
     },
     []
   );
 
+  const clearAllFavorites = useCallback(() => {
+    setFavorites([]);
+  }, []);
+
   return {
     favorites,
     isFavorite,
     toggleFavorite,
+    clearAllFavorites,
     count: favorites.length,
   };
 }
+

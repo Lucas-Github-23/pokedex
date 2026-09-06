@@ -61,10 +61,18 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
           </span>
         )}
         <button
+          type="button"
           className={`card-fav-hardware-btn ${isFavorite ? 'is-fav' : ''}`}
           onClick={(e) => {
             e.stopPropagation();
-            onToggleFavorite(pokemon, e);
+            e.preventDefault();
+            onToggleFavorite(
+              {
+                ...pokemon,
+                types: resolvedTypes,
+              },
+              e
+            );
           }}
           title={isFavorite ? 'Remover dos favoritos' : 'Favoritar espécime'}
           aria-label={isFavorite ? 'Remover dos favoritos' : 'Favoritar espécime'}

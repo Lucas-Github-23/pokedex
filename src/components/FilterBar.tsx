@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import { Crosshair, X, SlidersHorizontal, Gamepad2 } from 'lucide-react';
+import { Crosshair, X, SlidersHorizontal, Gamepad2, Heart } from 'lucide-react';
 import { POKEMON_TYPES, GENERATIONS } from '../constants/pokemonData';
 import { TypeIcon } from './TypeIcon';
 import type { GenerationKey, SortKey } from '../types/pokemon';
@@ -18,6 +18,9 @@ interface FilterBarProps {
   resultsCount: number;
   selectedSpriteStyle: SpriteStyle;
   onSelectSpriteStyle: (style: SpriteStyle) => void;
+  onlyFavorites?: boolean;
+  onToggleOnlyFavorites?: (val: boolean) => void;
+  favoritesCount?: number;
 }
 
 export const FilterBar: React.FC<FilterBarProps> = ({
@@ -32,6 +35,9 @@ export const FilterBar: React.FC<FilterBarProps> = ({
   resultsCount,
   selectedSpriteStyle,
   onSelectSpriteStyle,
+  onlyFavorites = false,
+  onToggleOnlyFavorites,
+  favoritesCount = 0,
 }) => {
   const searchInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -63,7 +69,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           className="scanner-input"
           value={searchTerm}
           onChange={(e) => onSearchChange(e.target.value)}
-          placeholder="Rastrear espécime por nome, código (#025), tipo (fogo) ou região (kanto)..."
+          placeholder="Rastrear espécime por nome, código (#025), tipo (fogo), região ou 'favoritos'..."
           aria-label="Buscar Pokémon no Scanner"
         />
         {searchTerm && (
@@ -81,18 +87,46 @@ export const FilterBar: React.FC<FilterBarProps> = ({
       {/* Generation Hardware Cartridges */}
       <div className="generation-switchboard">
         <button
-          className={`gen-cartridge-btn ${selectedGeneration === 'all' ? 'active' : ''}`}
-          onClick={() => onSelectGeneration('all')}
+          className={`gen-cartridge-btn ${!onlyFavorites && selectedGeneration === 'all' ? 'active' : ''}`}
+          onClick={() => {
+            if (onlyFavorites && onToggleOnlyFavorites) {
+              onToggleOnlyFavorites(false);
+            }
+            onSelectGeneration('all');
+          }}
         >
           <span className="gen-code">NATIONAL</span>
           <span className="gen-name">Todas as Regiões</span>
         </button>
 
+        {onToggleOnlyFavorites && (
+          <button
+            className={`gen-cartridge-btn fav-filter-btn ${onlyFavorites ? 'active-fav-filter' : ''}`}
+            onClick={() => onToggleOnlyFavorites(!onlyFavorites)}
+            title="Filtrar somente espécimes favoritados"
+          >
+            <span className="gen-code">
+              <Heart
+                size={11}
+                fill={onlyFavorites ? '#fff' : '#ef4444'}
+                color={onlyFavorites ? '#fff' : '#ef4444'}
+              />
+              FAVORITOS
+            </span>
+            <span className="gen-name">Salvos ({favoritesCount})</span>
+          </button>
+        )}
+
         {GENERATIONS.map((gen) => (
           <button
             key={gen.id}
-            className={`gen-cartridge-btn ${selectedGeneration === gen.id ? 'active' : ''}`}
-            onClick={() => onSelectGeneration(gen.id as GenerationKey)}
+            className={`gen-cartridge-btn ${!onlyFavorites && selectedGeneration === gen.id ? 'active' : ''}`}
+            onClick={() => {
+              if (onlyFavorites && onToggleOnlyFavorites) {
+                onToggleOnlyFavorites(false);
+              }
+              onSelectGeneration(gen.id as GenerationKey);
+            }}
           >
             <span className="gen-code">GEN 0{gen.id}</span>
             <span className="gen-name">{gen.region}</span>

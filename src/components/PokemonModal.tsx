@@ -228,8 +228,11 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
 
                 {/* Favorite Button */}
                 <button
+                  type="button"
                   className={`terminal-action-btn ${isFavorite ? 'active-fav' : ''}`}
-                  onClick={(e) =>
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
                     onToggleFavorite(
                       {
                         id: detail.id,
@@ -240,16 +243,17 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
                         japaneseName: japaneseName || getJapaneseName(detail.id),
                       },
                       e
-                    )
-                  }
-                  title={isFavorite ? 'Remover dos favoritos' : 'Favoritar'}
+                    );
+                  }}
+                  title={isFavorite ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
+                  aria-label={isFavorite ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
                 >
                   <Heart
                     size={15}
-                    fill={isFavorite ? '#ef4444' : 'none'}
-                    color={isFavorite ? '#ef4444' : 'currentColor'}
+                    fill={isFavorite ? '#ffffff' : 'none'}
+                    color={isFavorite ? '#ffffff' : 'currentColor'}
                   />
-                  <span>FAVORITO</span>
+                  <span>{isFavorite ? 'FAVORITADO' : 'FAVORITAR'}</span>
                 </button>
               </>
             )}

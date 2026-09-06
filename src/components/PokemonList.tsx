@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import type { PokemonListItem } from '../types/pokemon';
 import { PokemonCard } from './PokemonCard';
-import { SearchX, Loader2, CheckCircle2, Radio } from 'lucide-react';
+import { SearchX, Loader2, CheckCircle2, Radio, Heart } from 'lucide-react';
 
 import type { SpriteStyle } from '../constants/spriteStyles';
 
@@ -15,6 +15,7 @@ interface PokemonListProps {
   onLoadMore: () => void;
   totalFilteredCount: number;
   spriteStyle?: SpriteStyle;
+  onlyFavorites?: boolean;
 }
 
 export const PokemonList: React.FC<PokemonListProps> = ({
@@ -27,6 +28,7 @@ export const PokemonList: React.FC<PokemonListProps> = ({
   onLoadMore,
   totalFilteredCount,
   spriteStyle = 'official',
+  onlyFavorites = false,
 }) => {
   const sentinelRef = useRef<HTMLDivElement | null>(null);
   const [isAutoLoading, setIsAutoLoading] = useState(false);
@@ -86,6 +88,21 @@ export const PokemonList: React.FC<PokemonListProps> = ({
   }
 
   if (!loading && pokemonList.length === 0) {
+    if (onlyFavorites) {
+      return (
+        <div className="empty-state">
+          <div className="drawer-empty-icon-box" style={{ margin: '0 auto 16px' }}>
+            <Heart size={44} color="#ef4444" />
+          </div>
+          <h3>Nenhum Pokémon Favoritado</h3>
+          <p>
+            Você ainda não favoritou nenhum Pokémon ou os filtros atuais não correspondem aos seus favoritos.
+            Clique no ícone de coração nos cards para adicionar!
+          </p>
+        </div>
+      );
+    }
+
     return (
       <div className="empty-state">
         <SearchX size={48} className="empty-state-icon" color="#94a3b8" />

@@ -26,13 +26,14 @@ export const App: React.FC = () => {
   const [selectedType, setSelectedType] = useState<string>('');
   const [sortKey, setSortKey] = useState<SortKey>('id-asc');
   const [spriteStyle, setSpriteStyle] = useState<SpriteStyle>('official');
+  const [onlyFavorites, setOnlyFavorites] = useState<boolean>(false);
 
   // Modal & Drawer states
   const [selectedPokemonId, setSelectedPokemonId] = useState<number | null>(null);
   const [isFavoritesOpen, setIsFavoritesOpen] = useState<boolean>(false);
   const [visibleCount, setVisibleCount] = useState<number>(PAGE_SIZE);
 
-  const { favorites, isFavorite, toggleFavorite, count: favoritesCount } = useFavorites();
+  const { favorites, isFavorite, toggleFavorite, clearAllFavorites, count: favoritesCount } = useFavorites();
 
   // Load all Pokemon list initially
   useEffect(() => {
@@ -97,20 +98,29 @@ export const App: React.FC = () => {
   // Reset pagination on filter change
   useEffect(() => {
     setVisibleCount(PAGE_SIZE);
-  }, [searchTerm, selectedGeneration, selectedType, sortKey]);
+  }, [searchTerm, selectedGeneration, selectedType, sortKey, onlyFavorites]);
 
   // Filter and Sort Pipeline
   const filteredAndSortedPokemon = useMemo(() => {
     // 1. Start with base list (either type-filtered or all)
     let list = typeFilteredList !== null ? [...typeFilteredList] : [...allPokemon];
 
-    // 2. Search query filter (supporting prefix syntax 'tipo:' and 'região:' or generic text)
+    // 2. Only Favorites filter
+    if (onlyFavorites) {
+      list = list.filter((p) => isFavorite(p.id));
+    }
+
+    // 3. Search query filter (supporting prefix syntax 'tipo:' and 'região:' or generic text)
     const term = searchTerm.trim().toLowerCase();
     if (term) {
-      if (term.startsWith('tipo:')) {
+      if (term === 'favorito' || term === 'favoritos' || term === 'fav') {
+        list = list.filter((p) => isFavorite(p.id));
+      } else if (term.startsWith('tipo:')) {
         const typeArg = term.replace('tipo:', '').trim();
         if (typeArg && selectedType !== typeArg) {
-          // Will be handled if user uses input or we can filter
+          list = list.filter((p) =>
+            p.types?.some((t) => t.toLowerCase() === typeArg.toLowerCase())
+          );
         }
       } else if (term.startsWith('região:') || term.startsWith('regiao:')) {
         const genNum = term.replace(/regi[ãa]o:/, '').trim();
@@ -129,8 +139,8 @@ export const App: React.FC = () => {
       }
     }
 
-    // 3. Generation filter
-    if (selectedGeneration !== 'all') {
+    // 4. Generation filter
+    if (!onlyFavorites && selectedGeneration !== 'all') {
       const genConfig = GENERATIONS.find((g) => g.id === selectedGeneration);
       if (genConfig) {
         list = list.filter(
@@ -139,7 +149,7 @@ export const App: React.FC = () => {
       }
     }
 
-    // 4. Sorting
+    // 5. Sorting
     list.sort((a, b) => {
       switch (sortKey) {
         case 'id-asc':
@@ -156,7 +166,7 @@ export const App: React.FC = () => {
     });
 
     return list;
-  }, [allPokemon, typeFilteredList, searchTerm, selectedGeneration, selectedType, sortKey]);
+  }, [allPokemon, typeFilteredList, onlyFavorites, isFavorite, searchTerm, selectedGeneration, selectedType, sortKey]);
 
   // Paginated visible slice
   const visiblePokemon = useMemo(() => {
@@ -174,6 +184,7 @@ export const App: React.FC = () => {
     setSelectedGeneration('all');
     setSelectedType('');
     setSortKey('id-asc');
+    setOnlyFavorites(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
@@ -232,6 +243,9 @@ export const App: React.FC = () => {
             resultsCount={filteredAndSortedPokemon.length}
             selectedSpriteStyle={spriteStyle}
             onSelectSpriteStyle={setSpriteStyle}
+            onlyFavorites={onlyFavorites}
+            onToggleOnlyFavorites={setOnlyFavorites}
+            favoritesCount={favoritesCount}
           />
 
           {/* Pokemon Specimen Grid */}
@@ -245,6 +259,7 @@ export const App: React.FC = () => {
             onLoadMore={handleLoadMore}
             totalFilteredCount={filteredAndSortedPokemon.length}
             spriteStyle={spriteStyle}
+            onlyFavorites={onlyFavorites}
           />
         </main>
       </div>
@@ -279,9 +294,12 @@ export const App: React.FC = () => {
         favorites={favorites}
         onSelectPokemon={setSelectedPokemonId}
         onRemoveFavorite={toggleFavorite}
+        onClearAll={clearAllFavorites}
+        onViewInMainGrid={() => setOnlyFavorites(true)}
       />
     </div>
   );
 };
 
 export default App;
+
