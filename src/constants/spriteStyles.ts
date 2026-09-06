@@ -1,4 +1,4 @@
-export type SpriteStyle = 'official' | 'showdown' | 'ds' | 'gba' | 'gbc' | 'gb';
+export type SpriteStyle = 'official' | 'showdown' | 'ds' | 'gba';
 
 export interface SpriteStyleOption {
   id: SpriteStyle;
@@ -19,15 +19,15 @@ export const SPRITE_STYLES: SpriteStyleOption[] = [
   {
     id: 'showdown',
     label: 'Showdown 3D',
-    tag: 'ANIMADO',
-    badge: 'GEN 1-9',
+    tag: '3D',
+    badge: 'ANIMADO',
     description: 'Sprites animados 3D de todas as 9 gerações (Pokémon Showdown)',
   },
   {
     id: 'ds',
     label: 'Nintendo DS',
     tag: 'DS',
-    badge: 'ANIMADO',
+    badge: 'GEN 5',
     description: 'Sprites pixel-art animados clássicos de Black/White & Platinum',
   },
   {
@@ -36,20 +36,6 @@ export const SPRITE_STYLES: SpriteStyleOption[] = [
     tag: 'GBA',
     badge: 'GEN 3',
     description: 'Sprites clássicos de Pokémon Emerald, FireRed & LeafGreen',
-  },
-  {
-    id: 'gbc',
-    label: 'Game Boy Color',
-    tag: 'GBC',
-    badge: 'GEN 2',
-    description: 'Sprites nostálgicos de Pokémon Crystal, Gold & Silver (1999)',
-  },
-  {
-    id: 'gb',
-    label: 'Game Boy Clássico',
-    tag: 'GB',
-    badge: '1996',
-    description: 'Sprites monocromáticos originais de Pokémon Red & Blue (1996)',
   },
 ];
 
@@ -106,48 +92,6 @@ export function getPokemonSpriteUrl(
       : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${id}.gif`;
   }
 
-  // 5. GAME BOY COLOR (Crystal / Gold / Silver for IDs 1-251)
-  if (style === 'gbc') {
-    if (id <= 251) {
-      return isShiny
-        ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/shiny/${id}.png`
-        : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/${id}.png`;
-    }
-    if (id <= 386) {
-      return isShiny
-        ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/emerald/shiny/${id}.png`
-        : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/emerald/${id}.png`;
-    }
-    return isShiny
-      ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/${id}.gif`
-      : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${id}.gif`;
-  }
-
-  // 6. GAME BOY CLÁSSICO (Red / Blue monochrome for IDs 1-151)
-  if (style === 'gb') {
-    if (id <= 151) {
-      return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-i/red-blue/${id}.png`;
-    }
-    if (id <= 251) {
-      return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-ii/crystal/${id}.png`;
-    }
-    if (id <= 386) {
-      return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/emerald/${id}.png`;
-    }
-    return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${id}.gif`;
-  }
-
   return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
-}
-
-/**
- * Checks if the Pokemon is displaying an authentic Game Boy Classic or Game Boy Color sprite
- * with an opaque white bounding box that requires clean rounded borders.
- * Returns false if the Pokemon is from a later generation and falls back to a transparent sprite.
- */
-export function isRetroGBSprite(id: number, style: SpriteStyle): boolean {
-  if (style === 'gb') return id <= 151;
-  if (style === 'gbc') return id <= 251;
-  return false;
 }
 

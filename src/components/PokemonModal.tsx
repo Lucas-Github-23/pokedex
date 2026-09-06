@@ -34,7 +34,7 @@ import { EvolutionChain } from './EvolutionChain';
 import { GameLocations } from './GameLocations';
 import { BattlePedestal, getPokemonTerrain, getTerrainInfo } from './BattlePedestal';
 import type { SpriteStyle } from '../constants/spriteStyles';
-import { SPRITE_STYLES, getPokemonSpriteUrl, isRetroGBSprite } from '../constants/spriteStyles';
+import { SPRITE_STYLES, getPokemonSpriteUrl } from '../constants/spriteStyles';
 
 interface PokemonModalProps {
   pokemonId: number | null;
@@ -168,7 +168,6 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
   const weightKg = detail ? (detail.weight / 10).toFixed(1) : '0.0';
 
   const currentImage = getPokemonSpriteUrl(pokemonId, modalSpriteStyle, isShiny);
-  const isRetroGB = isRetroGBSprite(pokemonId, modalSpriteStyle);
 
   return (
     <div className="diagnostic-overlay" onClick={onClose} role="dialog" aria-modal="true">
@@ -339,7 +338,7 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
                   <img
                     src={currentImage}
                     alt={detail.name}
-                    className={`holo-sprite-img ${modalSpriteStyle !== 'official' ? 'pixelated-sprite' : ''} ${isRetroGB ? 'retro-gb-sprite' : ''}`}
+                    className={`holo-sprite-img ${modalSpriteStyle !== 'official' ? 'pixelated-sprite' : ''}`}
                     draggable={false}
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = getPokemonSpriteUrl(pokemonId, 'official', isShiny);
