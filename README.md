@@ -1,6 +1,6 @@
 <div align="center">
 
-# ⚡ POKÉDEX NACIONAL PRO
+# POKÉDEX NACIONAL PRO
 ### Sistema Biométrico & Terminal de Diagnóstico de Espécimes // Silph Co. OS
 
 [![React](https://img.shields.io/badge/React-19.2-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
@@ -32,7 +32,7 @@
 ### 🎮 Multi-Console Sprite Engine
 Alterne instantaneamente o estilo visual de todos os Pokémon da Pokédex:
 - **🎨 Oficial HD**: Ilustrações oficiais em altíssima definição da *The Pokémon Company*.
-- **⚡ Showdown 3D**: Sprites animados 3D de todas as gerações provenientes do *Pokémon Showdown*.
+- **Showdown 3D**: Sprites animados 3D de todas as gerações provenientes do *Pokémon Showdown*.
 - **👾 Nintendo DS**: Sprites animados e pixel-art clássicos da Geração 5 (Black & White).
 - **🕹️ Game Boy Advance (GBA)**: Sprites retrô 16-bit clássicos com renderização pixel-perfect e zero blur (`image-rendering: pixelated`).
 
@@ -56,7 +56,7 @@ Suporte e identificação automática de formas especiais com seletor interativo
 - Micro-animação comemorativa com chuva de confetes (`canvas-confetti`) ao favoritar.
 - **Drawer Lateral de Favoritos**: Acesso rápido, visualização de cards favoritados e botão de filtro direto na tela principal.
 
-### ⚡ Carregamento Infinito (Infinite Scroll)
+### Carregamento Infinito (Infinite Scroll)
 - Carregamento gradual e fluido via `IntersectionObserver` com barra de telemetria de progresso do radar biométrico.
 
 ---
@@ -194,5 +194,5 @@ Este projeto está licenciado sob a Licença **MIT** - consulte o arquivo [LICEN
 ---
 
 <div align="center">
-  Desenvolvido com carinho por <a href="https://github.com/Lucas-Github-23"><strong>Lucas</strong></a> ⚡
+  Desenvolvido por <a href="https://github.com/Lucas-Github-23"><strong>Lucas</strong></a>
 </div>
