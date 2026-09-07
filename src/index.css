@@ -1200,6 +1200,15 @@ body::before {
   image-rendering: crisp-edges;
 }
 
+/* Showdown 3D Animated Model Enhancements */
+.showdown-3d-enhanced,
+.specimen-sprite-img.showdown-3d-enhanced {
+  image-rendering: auto;
+  image-rendering: -webkit-optimize-contrast;
+  filter: contrast(1.08) brightness(1.04) saturate(1.15) drop-shadow(0 4px 10px rgba(0, 0, 0, 0.65));
+  will-change: transform, filter;
+}
+
 .specimen-card:hover .specimen-sprite-img {
   transform: scale(1.08);
 }
@@ -1534,6 +1543,14 @@ body::before {
   image-rendering: crisp-edges;
   max-width: 160px;
   max-height: 160px;
+}
+
+.holo-sprite-img.showdown-3d-enhanced {
+  image-rendering: auto;
+  image-rendering: -webkit-optimize-contrast;
+  max-width: 210px;
+  max-height: 210px;
+  filter: contrast(1.09) brightness(1.04) saturate(1.16) drop-shadow(0 12px 20px rgba(0, 0, 0, 0.75)) drop-shadow(0 0 16px rgba(0, 240, 255, 0.16));
 }
 
 /* Modal Elemental Badges */

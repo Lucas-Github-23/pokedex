@@ -392,7 +392,9 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
                 key={`${activePokemonId}-${modalSpriteStyle}-${isShiny}-${spriteFallbackIdx}`}
                 src={currentImage}
                 alt={displayTitle}
-                className={`holo-sprite-img ${modalSpriteStyle !== 'official' ? 'pixelated-sprite' : ''}`}
+                className={`holo-sprite-img sprite-style-${modalSpriteStyle} ${
+                  modalSpriteStyle === 'gba' || modalSpriteStyle === 'ds' ? 'pixelated-sprite' : ''
+                } ${modalSpriteStyle === 'showdown' ? 'showdown-3d-enhanced' : ''}`}
                 draggable={false}
                 onError={() => {
                   setSpriteFallbackIdx((prev) =>

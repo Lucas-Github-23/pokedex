@@ -116,7 +116,9 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
           key={`${pokemon.id}-${spriteStyle}`}
           src={spriteUrl}
           alt={pokemon.name}
-          className={`specimen-sprite-img ${spriteStyle !== 'official' ? 'pixelated-sprite' : ''}`}
+          className={`specimen-sprite-img sprite-style-${spriteStyle} ${
+            spriteStyle === 'gba' || spriteStyle === 'ds' ? 'pixelated-sprite' : ''
+          } ${spriteStyle === 'showdown' ? 'showdown-3d-enhanced' : ''}`}
           loading="lazy"
           draggable={false}
           data-fallback-index="0"
