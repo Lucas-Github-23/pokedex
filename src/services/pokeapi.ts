@@ -10,6 +10,7 @@ import type {
 import { GAME_EDITIONS_META, formatLocationAreaName } from '../constants/gameLocationsData';
 import { POKEMON_TYPES_MAP } from '../constants/pokemonTypes';
 import { formatVarietyInfo, isMeaningfulVariety } from '../constants/pokemonForms';
+import { getJapaneseName } from '../constants/japaneseNames';
 
 const BASE_URL = 'https://pokeapi.co/api/v2';
 
@@ -59,6 +60,7 @@ export async function fetchAllPokemonList(): Promise<PokemonListItem[]> {
         url: entry.url,
         sprite: getOfficialArtworkUrl(id),
         types: POKEMON_TYPES_MAP[id] || [],
+        japaneseName: getJapaneseName(id),
       };
     });
 
@@ -371,6 +373,7 @@ export async function fetchPokemonByType(type: string): Promise<PokemonListItem[
         url: entry.pokemon.url,
         sprite: getOfficialArtworkUrl(id),
         types: POKEMON_TYPES_MAP[id] || [type.toLowerCase()],
+        japaneseName: getJapaneseName(id),
       };
     });
   } catch (error) {
