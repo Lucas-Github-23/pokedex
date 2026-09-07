@@ -7,7 +7,11 @@ import { getJapaneseName } from '../constants/japaneseNames';
 import { KNOWN_ALTERNATIVE_FORMS } from '../constants/pokemonForms';
 import { TypeIcon } from './TypeIcon';
 import type { SpriteStyle } from '../constants/spriteStyles';
-import { getPokemonSpriteUrl } from '../constants/spriteStyles';
+import {
+  getPokemonSpriteUrl,
+  getSpriteFallbackChain,
+  handleSpriteErrorWithChain,
+} from '../constants/spriteStyles';
 
 interface PokemonCardProps {
   pokemon: PokemonListItem;
@@ -32,7 +36,11 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
   const primaryType = resolvedTypes[0] || 'normal';
   const typeConfig = POKEMON_TYPES[primaryType] || POKEMON_TYPES.normal;
   const japaneseText = pokemon.japaneseName || getJapaneseName(pokemon.id);
-  const spriteUrl = getPokemonSpriteUrl(pokemon.id, spriteStyle, false);
+  const spriteUrl = getPokemonSpriteUrl(pokemon.id, spriteStyle, false, pokemon.name);
+  const fallbackChain = React.useMemo(
+    () => getSpriteFallbackChain(pokemon.id, spriteStyle, false, pokemon.name),
+    [pokemon.id, spriteStyle, pokemon.name]
+  );
   const knownForms = KNOWN_ALTERNATIVE_FORMS[pokemon.id];
 
   return (
@@ -105,11 +113,14 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
           </div>
         )}
         <img
+          key={`${pokemon.id}-${spriteStyle}`}
           src={spriteUrl}
           alt={pokemon.name}
           className={`specimen-sprite-img ${spriteStyle !== 'official' ? 'pixelated-sprite' : ''}`}
           loading="lazy"
           draggable={false}
+          data-fallback-index="0"
+          onError={(e) => handleSpriteErrorWithChain(e, fallbackChain)}
         />
       </div>
 

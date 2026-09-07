@@ -36,7 +36,12 @@ import { TypeIcon } from './TypeIcon';
 import { EvolutionChain } from './EvolutionChain';
 import { GameLocations } from './GameLocations';
 import type { SpriteStyle } from '../constants/spriteStyles';
-import { SPRITE_STYLES, getPokemonSpriteUrl } from '../constants/spriteStyles';
+import {
+  SPRITE_STYLES,
+  getPokemonSpriteUrl,
+  getSpriteFallbackChain,
+  handleSpriteErrorWithChain,
+} from '../constants/spriteStyles';
 
 interface PokemonModalProps {
   pokemonId: number | null;
@@ -194,7 +199,23 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
   const weightKg = detail ? (detail.weight / 10).toFixed(1) : '0.0';
 
   const activePokemonId = selectedVariety?.id || detail?.id || pokemonId || 1;
-  const currentImage = getPokemonSpriteUrl(activePokemonId, modalSpriteStyle, isShiny);
+  const activePokemonName = selectedVariety?.name || detail?.name || '';
+  const currentImage = getPokemonSpriteUrl(
+    activePokemonId,
+    modalSpriteStyle,
+    isShiny,
+    activePokemonName
+  );
+  const fallbackChain = React.useMemo(
+    () =>
+      getSpriteFallbackChain(
+        activePokemonId,
+        modalSpriteStyle,
+        isShiny,
+        activePokemonName
+      ),
+    [activePokemonId, modalSpriteStyle, isShiny, activePokemonName]
+  );
   const displayTitle = selectedVariety && !selectedVariety.is_default ? selectedVariety.displayName : detail?.name;
 
   return (
@@ -354,13 +375,13 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
 
                   {/* The Pokemon Sprite */}
                   <img
+                    key={`${activePokemonId}-${modalSpriteStyle}-${isShiny}`}
                     src={currentImage}
                     alt={detail.name}
                     className={`holo-sprite-img ${modalSpriteStyle !== 'official' ? 'pixelated-sprite' : ''}`}
                     draggable={false}
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = getPokemonSpriteUrl(activePokemonId, 'official', isShiny);
-                    }}
+                    data-fallback-index="0"
+                    onError={(e) => handleSpriteErrorWithChain(e, fallbackChain)}
                   />
 
                   {/* Vertical Scanner Line */}

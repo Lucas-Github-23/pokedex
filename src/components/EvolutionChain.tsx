@@ -106,6 +106,9 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
                     alt={stage.name}
                     className="evo-node-sprite-img"
                     loading="lazy"
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${stage.id}.png`;
+                    }}
                   />
                 </div>
 
