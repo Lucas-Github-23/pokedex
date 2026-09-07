@@ -311,16 +311,18 @@ export const App: React.FC = () => {
       </footer>
 
       {/* Dual-Screen Diagnostic Terminal Modal */}
-      <PokemonModal
-        pokemonId={selectedPokemonId}
-        initialPokemon={selectedPokemonId ? allPokemon.find((p) => p.id === selectedPokemonId) : undefined}
-        onClose={() => setSelectedPokemonId(null)}
-        onSelectPokemon={setSelectedPokemonId}
-        isFavorite={selectedPokemonId ? isFavorite(selectedPokemonId) : false}
-        onToggleFavorite={toggleFavorite}
-        totalPokemonCount={allPokemon.length || 1025}
-        initialSpriteStyle={spriteStyle}
-      />
+      {selectedPokemonId !== null && (
+        <PokemonModal
+          pokemonId={selectedPokemonId}
+          initialPokemon={allPokemon.find((p) => p.id === selectedPokemonId)}
+          onClose={() => setSelectedPokemonId(null)}
+          onSelectPokemon={setSelectedPokemonId}
+          isFavorite={isFavorite(selectedPokemonId)}
+          onToggleFavorite={toggleFavorite}
+          totalPokemonCount={allPokemon.length || 1025}
+          initialSpriteStyle={spriteStyle}
+        />
+      )}
 
       {/* Favorites Storage Drawer */}
       <FavoritesDrawer

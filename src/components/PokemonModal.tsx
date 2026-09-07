@@ -179,8 +179,6 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [pokemonId, onClose, onSelectPokemon, totalPokemonCount]);
 
-  if (!pokemonId) return null;
-
   const handlePlayCry = () => {
     const crySource = detail?.cryUrl || `https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${pokemonId}.ogg`;
 
@@ -241,9 +239,9 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
   const displayTitle =
     selectedVariety && !selectedVariety.is_default
       ? selectedVariety.displayName
-      : detail?.name || initialPokemon?.name || `Pokémon #${pokemonId}`;
+      : detail?.name || initialPokemon?.name || `Pokémon #${pokemonId || 1}`;
 
-  const currentJapanese = japaneseName || initialPokemon?.japaneseName || getJapaneseName(pokemonId);
+  const currentJapanese = japaneseName || initialPokemon?.japaneseName || (pokemonId ? getJapaneseName(pokemonId) : '');
 
   // Lock background scroll while modal is active
   useEffect(() => {
