@@ -45,10 +45,30 @@ export interface EvolutionStage {
   item?: string | null;
 }
 
+export interface LocationAreaDetail {
+  areaName: string;
+  rawName: string;
+  maxChance?: number;
+  methods?: string[];
+  minLevel?: number | null;
+  maxLevel?: number | null;
+}
+
 export interface GameLocations {
   game: string;
+  gameId: string;
+  generation: number;
+  genName: string;
+  consoleName: string;
+  region: string;
   locations: string[];
+  areas: LocationAreaDetail[];
   colorClass: string;
+  accentColor: string;
+  borderColor: string;
+  bgGradient: string;
+  badgeBg: string;
+  group: 'gen1-3' | 'gen4-5' | 'gen6-7' | 'gen8-9';
 }
 
 export type FormCategory =

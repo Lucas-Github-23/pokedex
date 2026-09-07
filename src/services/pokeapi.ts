@@ -3,10 +3,11 @@ import type {
   PokemonDetail,
   EvolutionStage,
   GameLocations,
+  LocationAreaDetail,
   PokemonSpeciesData,
   PokemonVariety,
 } from '../types/pokemon';
-import { GAME_VERSION_COLORS } from '../constants/pokemonData';
+import { GAME_EDITIONS_META, formatLocationAreaName } from '../constants/gameLocationsData';
 import { POKEMON_TYPES_MAP } from '../constants/pokemonTypes';
 import { formatVarietyInfo, isMeaningfulVariety } from '../constants/pokemonForms';
 
@@ -254,34 +255,99 @@ export async function fetchPokemonLocations(locationsUrl: string): Promise<GameL
       return [];
     }
 
-    // Group locations by game version (like original details.js)
-    const grouped: Record<string, string[]> = {};
+    // Group locations by game version with rich details
+    const grouped: Record<
+      string,
+      {
+        locations: string[];
+        areas: LocationAreaDetail[];
+      }
+    > = {};
 
     data.forEach((location: any) => {
-      const areaName = location.location_area.name
-        .replace(/-/g, ' ')
-        .replace(/\b\w/g, (l: string) => l.toUpperCase());
+      const rawName = location.location_area?.name || '';
+      const formattedAreaName = formatLocationAreaName(rawName);
 
-      location.version_details.forEach((detail: any) => {
-        const gameName = detail.version.name;
-        if (!grouped[gameName]) {
-          grouped[gameName] = [];
+      location.version_details?.forEach((detail: any) => {
+        const gameKey = detail.version?.name?.toLowerCase() || 'unknown';
+        if (!grouped[gameKey]) {
+          grouped[gameKey] = {
+            locations: [],
+            areas: [],
+          };
         }
-        if (!grouped[gameName].includes(areaName)) {
-          grouped[gameName].push(areaName);
+
+        if (!grouped[gameKey].locations.includes(formattedAreaName)) {
+          grouped[gameKey].locations.push(formattedAreaName);
+        }
+
+        // Extract encounter methods & level ranges
+        const maxChance = detail.max_chance || 0;
+        const methodsSet = new Set<string>();
+        let minLevel: number | null = null;
+        let maxLevel: number | null = null;
+
+        detail.encounter_details?.forEach((enc: any) => {
+          if (enc.method?.name) {
+            methodsSet.add(enc.method.name);
+          }
+          if (enc.min_level !== undefined && enc.min_level !== null) {
+            if (minLevel === null || enc.min_level < minLevel) minLevel = enc.min_level;
+          }
+          if (enc.max_level !== undefined && enc.max_level !== null) {
+            if (maxLevel === null || enc.max_level > maxLevel) maxLevel = enc.max_level;
+          }
+        });
+
+        // Avoid duplicate area entry for the same game
+        if (!grouped[gameKey].areas.some((a) => a.rawName === rawName)) {
+          grouped[gameKey].areas.push({
+            areaName: formattedAreaName,
+            rawName,
+            maxChance,
+            methods: Array.from(methodsSet),
+            minLevel,
+            maxLevel,
+          });
         }
       });
     });
 
-    const result: GameLocations[] = Object.keys(grouped).map((game) => {
-      const normalizedGame = game.toLowerCase();
-      const hasColor = GAME_VERSION_COLORS[normalizedGame];
+    const result: GameLocations[] = Object.keys(grouped).map((gameKey) => {
+      const meta = GAME_EDITIONS_META[gameKey] || {
+        title: `Pokémon ${gameKey.replace(/-/g, ' ').toUpperCase()}`,
+        shortTitle: gameKey.toUpperCase(),
+        generation: 1,
+        genLabel: 'GERAL',
+        console: 'Console',
+        region: 'Região Mapeada',
+        color: '#38bdf8',
+        borderColor: '#0284c7',
+        gradient: 'linear-gradient(135deg, rgba(2, 132, 199, 0.25) 0%, rgba(15, 23, 42, 0.9) 100%)',
+        badgeBg: 'rgba(56, 189, 248, 0.2)',
+        group: 'gen1-3' as const,
+      };
+
       return {
-        game: game.replace(/-/g, ' ').toUpperCase(),
-        locations: grouped[game],
-        colorClass: hasColor ? normalizedGame : 'default',
+        game: meta.title,
+        gameId: gameKey,
+        generation: meta.generation,
+        genName: meta.genLabel,
+        consoleName: meta.console,
+        region: meta.region,
+        locations: grouped[gameKey].locations,
+        areas: grouped[gameKey].areas,
+        colorClass: gameKey,
+        accentColor: meta.color,
+        borderColor: meta.borderColor,
+        bgGradient: meta.gradient,
+        badgeBg: meta.badgeBg,
+        group: meta.group,
       };
     });
+
+    // Sort chronologically by generation
+    result.sort((a, b) => a.generation - b.generation);
 
     locationsCache.set(locationsUrl, result);
     return result;

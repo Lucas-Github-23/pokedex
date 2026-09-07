@@ -675,7 +675,10 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
                   )}
 
                   {activeTab === 'locations' && (
-                    <GameLocations locations={locations} />
+                    <GameLocations
+                      locations={locations}
+                      pokemonName={detail?.name || initialPokemon?.name || `Pokémon #${pokemonId}`}
+                    />
                   )}
                 </>
               )}
