@@ -236,8 +236,7 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
     fallbackChain[0] ||
     getPokemonSpriteUrl(activePokemonId, modalSpriteStyle, isShiny, activePokemonName);
 
-  // Apply xBR 2x specifically to Showdown 3D; retro consoles stay clean pixelated with zero blur
-  const isShowdown = modalSpriteStyle === 'showdown';
+  // Retro consoles (GBA, DS) use crisp pixelated rendering without blur
   const isPixelArt = modalSpriteStyle === 'gba' || modalSpriteStyle === 'ds';
 
   const displayTitle =
@@ -398,7 +397,7 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
                 alt={displayTitle}
                 className={`holo-sprite-img sprite-style-${modalSpriteStyle} ${
                   isPixelArt ? 'pixelated-sprite' : ''
-                } ${isShowdown ? 'showdown-3d-xbr' : ''}`}
+                }`}
                 draggable={false}
                 onError={() => {
                   setSpriteFallbackIdx((prev) =>

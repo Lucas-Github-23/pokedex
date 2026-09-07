@@ -38,8 +38,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
   const japaneseText = pokemon.japaneseName || getJapaneseName(pokemon.id);
   const spriteUrl = getPokemonSpriteUrl(pokemon.id, spriteStyle, false, pokemon.name);
 
-  // Apply xBR 2x filter specifically to Showdown 3D models; retro consoles stay clean pixelated
-  const isShowdown = spriteStyle === 'showdown';
+  // Retro consoles (GBA, DS) use crisp pixelated rendering without blur
   const isPixelArt = spriteStyle === 'gba' || spriteStyle === 'ds';
 
   const fallbackChain = React.useMemo(
@@ -123,7 +122,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
           alt={pokemon.name}
           className={`specimen-sprite-img sprite-style-${spriteStyle} ${
             isPixelArt ? 'pixelated-sprite' : ''
-          } ${isShowdown ? 'showdown-3d-xbr' : ''}`}
+          }`}
           loading="lazy"
           draggable={false}
           data-fallback-index="0"

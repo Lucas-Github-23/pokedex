@@ -6,7 +6,6 @@ import { PokemonModal } from './components/PokemonModal';
 import { FavoritesDrawer } from './components/FavoritesDrawer';
 import { AdvancedFilterModal } from './components/AdvancedFilterModal';
 import { ActiveFilterChips } from './components/ActiveFilterChips';
-import { XbrSvgFilter } from './components/XbrSvgFilter';
 import { useFavorites } from './hooks/useFavorites';
 import {
   fetchAllPokemonList,
@@ -420,9 +419,6 @@ export const App: React.FC = () => {
 
   return (
     <div className="pokedex-chassis">
-      {/* GPU-Accelerated Real-Time xBR 2x Vector Filter Definitions */}
-      <XbrSvgFilter />
-
       {/* Top Hardware Bar: Sensor Lens + Indicator LEDs + HUD */}
       <Navbar
         favoritesCount={favoritesCount}

@@ -1,16 +1,7 @@
 export type SpriteStyle = 'official' | 'showdown' | 'ds' | 'gba';
-export type EmulatorShader = 'none' | 'xbr-3x' | 'xbr-2x' | 'xbr-hd' | 'xbr-comic' | 'sketch';
 
 export interface SpriteStyleOption {
   id: SpriteStyle;
-  label: string;
-  tag: string;
-  badge: string;
-  description: string;
-}
-
-export interface ShaderOption {
-  id: EmulatorShader;
   label: string;
   tag: string;
   badge: string;
@@ -45,51 +36,6 @@ export const SPRITE_STYLES: SpriteStyleOption[] = [
     tag: 'GBA',
     badge: 'GEN 3',
     description: 'Sprites retrô pixel-art 16-bit de Pokémon Emerald, FireRed e Smogon',
-  },
-];
-
-export const EMULATOR_SHADERS: ShaderOption[] = [
-  {
-    id: 'none',
-    label: 'Original (Sem Filtro)',
-    tag: 'OFF',
-    badge: 'PADRÃO',
-    description: 'Renderização padrão pixel-art / 3D direta',
-  },
-  {
-    id: 'xbr-3x',
-    label: 'xBR 3x / xBRZ (Vetor HD)',
-    tag: 'xBR 3X',
-    badge: 'xBR HD',
-    description: 'Algoritmo xBR que transforma escadas de pixels em curvas e linhas contínuas de desenho',
-  },
-  {
-    id: 'xbr-2x',
-    label: 'xBR 2x (Curvas Suaves)',
-    tag: 'xBR 2X',
-    badge: 'xBR 2X',
-    description: 'Interpolação diagonal xBR de 45° suavizando o contorno dos pixels sem blur',
-  },
-  {
-    id: 'xbr-hd',
-    label: 'xBR + Traçado Anime',
-    tag: 'xBR ANIME',
-    badge: 'ANIME',
-    description: 'Vetorização de curvas xBR combinada com contornos nítidos de desenho japonês',
-  },
-  {
-    id: 'xbr-comic',
-    label: 'xBR + Cel-Shading HQ',
-    tag: 'xBR HQ',
-    badge: 'COMIC',
-    description: 'Curvas xBR com contorno preto grosso e coloração cel estilo história em quadrinhos',
-  },
-  {
-    id: 'sketch',
-    label: 'Esboço Mangá / Grafite',
-    tag: 'ESBOÇO',
-    badge: 'MANGÁ',
-    description: 'Converte as formas e pixels em linhas de grafite e traçados finos de mangá',
   },
 ];
 
