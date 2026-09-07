@@ -12,6 +12,7 @@ import {
   getSpriteFallbackChain,
   handleSpriteErrorWithChain,
 } from '../constants/spriteStyles';
+import { useXbrImage } from '../hooks/useXbrImage';
 
 interface PokemonCardProps {
   pokemon: PokemonListItem;
@@ -39,6 +40,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
   const typeConfig = POKEMON_TYPES[primaryType] || POKEMON_TYPES.normal;
   const japaneseText = pokemon.japaneseName || getJapaneseName(pokemon.id);
   const spriteUrl = getPokemonSpriteUrl(pokemon.id, spriteStyle, false, pokemon.name);
+  const { imageSrc: xbrProcessedSprite } = useXbrImage(spriteUrl, shader);
   const fallbackChain = React.useMemo(
     () => getSpriteFallbackChain(pokemon.id, spriteStyle, false, pokemon.name),
     [pokemon.id, spriteStyle, pokemon.name]
@@ -119,7 +121,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
         )}
         <img
           key={`${pokemon.id}-${spriteStyle}-${shader}`}
-          src={spriteUrl}
+          src={xbrProcessedSprite}
           alt={pokemon.name}
           className={`specimen-sprite-img sprite-style-${spriteStyle} sprite-shader-${shader} ${
             spriteStyle === 'gba' || spriteStyle === 'ds' ? 'pixelated-sprite' : ''

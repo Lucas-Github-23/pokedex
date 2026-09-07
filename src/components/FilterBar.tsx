@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import { Crosshair, X, SlidersHorizontal, Gamepad2, Heart, PenTool } from 'lucide-react';
+import { Crosshair, X, SlidersHorizontal, Gamepad2, Heart, Sparkles } from 'lucide-react';
 import { POKEMON_TYPES, GENERATIONS } from '../constants/pokemonData';
 import { TypeIcon } from './TypeIcon';
 import type { GenerationKey, SortKey } from '../types/pokemon';
@@ -218,12 +218,12 @@ export const FilterBar: React.FC<FilterBarProps> = ({
         </div>
       </div>
 
-      {/* Hand-Drawn Lineart Shader Selector Bar */}
+      {/* xBR Vectorization & Lineart Shader Selector Bar */}
       {onSelectShader && (
         <div className="shader-selector-bar">
           <div className="shader-selector-label">
-            <PenTool size={16} color="var(--poke-cyan)" />
-            <span>TRAÇADO DE LINHAS (DESENHO):</span>
+            <Sparkles size={16} color="var(--poke-cyan)" />
+            <span>FILTRO xBR (VETORIZADOR DE LINHAS):</span>
           </div>
           <div className="shader-selector-chips">
             {EMULATOR_SHADERS.map((sh) => (

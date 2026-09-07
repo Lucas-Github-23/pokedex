@@ -719,71 +719,66 @@ body::before {
 }
 
 /* ==========================================================================
-   HAND-DRAWN LINEART & CONTOUR SHADERS (PIXEL INKING & ANIME/MANGA DRAWING)
+   xBR / xBRZ PIXEL VECTORIZATION & HYBRID LINE SHADERS
    ========================================================================== */
 
-/* 1. Traçado Anime / Nanquim (Inked Anime Lineart) */
-.sprite-shader-ink {
-  filter: url(#shader-filter-ink)
-          contrast(1.35)
-          brightness(1.02)
+/* 1. xBR 3x / xBRZ (Vetor HD) */
+.sprite-shader-xbr-3x {
+  image-rendering: auto;
+  image-rendering: -webkit-optimize-contrast;
+  filter: contrast(1.18) saturate(1.15) brightness(1.03) drop-shadow(0 4px 10px rgba(0, 0, 0, 0.65));
+}
+
+/* 2. xBR 2x (Curvas Suaves) */
+.sprite-shader-xbr-2x {
+  image-rendering: auto;
+  image-rendering: -webkit-optimize-contrast;
+  filter: contrast(1.14) saturate(1.1) brightness(1.02) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.6));
+}
+
+/* 3. xBR + Traçado Anime */
+.sprite-shader-xbr-hd {
+  image-rendering: auto;
+  image-rendering: -webkit-optimize-contrast;
+  filter: contrast(1.25)
           saturate(1.25)
+          brightness(1.04)
           drop-shadow(1px 0 0 #000000)
           drop-shadow(-1px 0 0 #000000)
           drop-shadow(0 1px 0 #000000)
           drop-shadow(0 -1px 0 #000000)
-          drop-shadow(0 6px 12px rgba(0, 0, 0, 0.7));
-  image-rendering: -webkit-optimize-contrast;
+          drop-shadow(0 6px 14px rgba(0, 0, 0, 0.75));
 }
 
-/* 2. Traçado HQ / Quadrinhos (Comic Book Cel-Inking) */
-.sprite-shader-comic {
-  filter: url(#shader-filter-comic)
-          contrast(1.4)
-          saturate(1.35)
+/* 4. xBR + Cel-Shading HQ */
+.sprite-shader-xbr-comic {
+  image-rendering: auto;
+  image-rendering: -webkit-optimize-contrast;
+  filter: contrast(1.35)
+          saturate(1.3)
           drop-shadow(1.5px 1.5px 0 #000000)
           drop-shadow(-1.5px -1.5px 0 #000000)
           drop-shadow(1.5px -1.5px 0 #000000)
           drop-shadow(-1.5px 1.5px 0 #000000)
           drop-shadow(0 8px 16px rgba(0, 0, 0, 0.8));
-  image-rendering: -webkit-optimize-contrast;
 }
 
-/* 3. Esboço Mangá / Grafite (Manga Sketch / Pencil Hatching) */
+/* 5. Esboço Mangá / Grafite */
 .sprite-shader-sketch {
-  filter: url(#shader-filter-sketch)
-          grayscale(0.9)
-          contrast(1.5)
+  image-rendering: auto;
+  image-rendering: -webkit-optimize-contrast;
+  filter: grayscale(0.9)
+          contrast(1.45)
           drop-shadow(1px 0 0 #0f172a)
           drop-shadow(-1px 0 0 #0f172a)
           drop-shadow(0 1px 0 #0f172a)
           drop-shadow(0 -1px 0 #0f172a)
           drop-shadow(0 4px 8px rgba(0, 0, 0, 0.6));
-  image-rendering: -webkit-optimize-contrast;
 }
 
-/* 4. Contorno Vetorial / Toon (Clean Vector Line Art) */
-.sprite-shader-toon {
-  filter: url(#shader-filter-toon)
-          contrast(1.28)
-          saturate(1.22)
-          drop-shadow(2px 0 0 #000000)
-          drop-shadow(-2px 0 0 #000000)
-          drop-shadow(0 2px 0 #000000)
-          drop-shadow(0 -2px 0 #000000)
-          drop-shadow(0 6px 14px rgba(0, 0, 0, 0.8));
-  image-rendering: -webkit-optimize-contrast;
-}
-
-/* 5. Traçado Hachurado (Cross-Hatch Engraving Lines) */
-.sprite-shader-crosshatch {
-  filter: url(#shader-filter-crosshatch)
-          contrast(1.35)
-          saturate(1.15)
-          drop-shadow(1px 1px 0 #000000)
-          drop-shadow(-1px -1px 0 #000000)
-          drop-shadow(0 5px 10px rgba(0, 0, 0, 0.7));
-  image-rendering: -webkit-optimize-contrast;
+/* Clean Default */
+.sprite-shader-none {
+  /* Clean default */
 }
 
 /* Clean Default */

@@ -18,7 +18,6 @@ import {
   Layers,
   AlertTriangle,
   RotateCcw,
-  PenTool,
 } from 'lucide-react';
 import { ErrorBoundary } from './ErrorBoundary';
 import type {
@@ -48,6 +47,7 @@ import {
   getPokemonSpriteUrl,
   getSpriteFallbackChain,
 } from '../constants/spriteStyles';
+import { useXbrImage } from '../hooks/useXbrImage';
 
 interface PokemonModalProps {
   pokemonId: number | null;
@@ -245,6 +245,8 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
     fallbackChain[0] ||
     getPokemonSpriteUrl(activePokemonId, modalSpriteStyle, isShiny, activePokemonName);
 
+  const { imageSrc: xbrProcessedImage } = useXbrImage(currentImage, modalShader);
+
   const displayTitle =
     selectedVariety && !selectedVariety.is_default
       ? selectedVariety.displayName
@@ -404,7 +406,7 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
               {/* The Pokemon Sprite */}
               <img
                 key={`${activePokemonId}-${modalSpriteStyle}-${modalShader}-${isShiny}-${spriteFallbackIdx}`}
-                src={currentImage}
+                src={xbrProcessedImage}
                 alt={displayTitle}
                 className={`holo-sprite-img sprite-style-${modalSpriteStyle} sprite-shader-${modalShader} ${
                   modalSpriteStyle === 'gba' || modalSpriteStyle === 'ds' ? 'pixelated-sprite' : ''
@@ -490,11 +492,11 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
               </div>
             </div>
 
-            {/* Hand-Drawn Lineart Shader Toolbar inside Modal */}
+            {/* xBR Vectorization & Lineart Shader Toolbar inside Modal */}
             <div className="modal-shader-switch-bar">
               <div className="modal-shader-bar-header">
-                <PenTool size={13} color="var(--poke-cyan)" />
-                <span>TRAÇADO DE LINHAS (ESTILO DESENHO)</span>
+                <Sparkles size={13} color="var(--poke-cyan)" />
+                <span>FILTRO xBR (VETORIZADOR DE LINHAS)</span>
               </div>
               <div className="modal-shader-chips">
                 {EMULATOR_SHADERS.map((sh) => (
