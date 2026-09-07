@@ -46,7 +46,6 @@ import {
   getPokemonSpriteUrl,
   getSpriteFallbackChain,
 } from '../constants/spriteStyles';
-import { useXbrImage } from '../hooks/useXbrImage';
 
 interface PokemonModalProps {
   pokemonId: number | null;
@@ -240,7 +239,6 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
   // Apply xBR 2x specifically to Showdown 3D; retro consoles stay clean pixelated with zero blur
   const isShowdown = modalSpriteStyle === 'showdown';
   const isPixelArt = modalSpriteStyle === 'gba' || modalSpriteStyle === 'ds';
-  const { imageSrc: renderedModalImage } = useXbrImage(currentImage, isShowdown ? 'xbr-2x' : 'none');
 
   const displayTitle =
     selectedVariety && !selectedVariety.is_default
@@ -396,7 +394,7 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
               {/* The Pokemon Sprite */}
               <img
                 key={`${activePokemonId}-${modalSpriteStyle}-${isShiny}-${spriteFallbackIdx}`}
-                src={renderedModalImage}
+                src={currentImage}
                 alt={displayTitle}
                 className={`holo-sprite-img sprite-style-${modalSpriteStyle} ${
                   isPixelArt ? 'pixelated-sprite' : ''

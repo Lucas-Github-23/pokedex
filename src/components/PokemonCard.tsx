@@ -12,7 +12,6 @@ import {
   getSpriteFallbackChain,
   handleSpriteErrorWithChain,
 } from '../constants/spriteStyles';
-import { useXbrImage } from '../hooks/useXbrImage';
 
 interface PokemonCardProps {
   pokemon: PokemonListItem;
@@ -39,10 +38,9 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
   const japaneseText = pokemon.japaneseName || getJapaneseName(pokemon.id);
   const spriteUrl = getPokemonSpriteUrl(pokemon.id, spriteStyle, false, pokemon.name);
 
-  // Apply xBR 2x specifically to Showdown 3D models; retro consoles stay clean pixelated
+  // Apply xBR 2x filter specifically to Showdown 3D models; retro consoles stay clean pixelated
   const isShowdown = spriteStyle === 'showdown';
   const isPixelArt = spriteStyle === 'gba' || spriteStyle === 'ds';
-  const { imageSrc: renderedSprite } = useXbrImage(spriteUrl, isShowdown ? 'xbr-2x' : 'none');
 
   const fallbackChain = React.useMemo(
     () => getSpriteFallbackChain(pokemon.id, spriteStyle, false, pokemon.name),
@@ -121,7 +119,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
         )}
         <img
           key={`${pokemon.id}-${spriteStyle}`}
-          src={renderedSprite}
+          src={spriteUrl}
           alt={pokemon.name}
           className={`specimen-sprite-img sprite-style-${spriteStyle} ${
             isPixelArt ? 'pixelated-sprite' : ''

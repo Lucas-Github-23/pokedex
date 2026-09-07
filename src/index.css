@@ -1432,22 +1432,31 @@ body::before {
 /* Pixel-perfect razor-sharp rendering for retro consoles (GBA, GBC, GB, DS) - ZERO BLUR */
 .pixelated-sprite,
 .specimen-sprite-img.pixelated-sprite,
-.sprite-style-gba,
-.sprite-style-ds {
+.specimen-sprite-img.sprite-style-gba,
+.specimen-sprite-img.sprite-style-ds {
   image-rendering: pixelated !important;
   image-rendering: -moz-crisp-edges !important;
   image-rendering: crisp-edges !important;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.6)) !important;
 }
 
-/* Showdown 3D Animated Model with xBR 2x */
+/* Showdown 3D Animated Model with Real-Time xBR 2x GPU Vector Filter */
 .showdown-3d-xbr,
 .specimen-sprite-img.showdown-3d-xbr,
+.specimen-sprite-img.sprite-style-showdown,
 .showdown-3d-enhanced,
 .specimen-sprite-img.showdown-3d-enhanced {
-  image-rendering: auto;
-  image-rendering: -webkit-optimize-contrast;
-  filter: contrast(1.06) brightness(1.03) saturate(1.12) drop-shadow(0 4px 10px rgba(0, 0, 0, 0.65));
+  image-rendering: pixelated !important;
+  image-rendering: -moz-crisp-edges !important;
+  image-rendering: crisp-edges !important;
+  filter: url(#showdown-xbr-2x) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.65)) !important;
   will-change: transform, filter;
+}
+
+/* Official Artwork HD - Clean Native Vector & Raster Rendering */
+.specimen-sprite-img.sprite-style-official {
+  image-rendering: auto;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.6));
 }
 
 .specimen-card:hover .specimen-sprite-img {
@@ -1778,21 +1787,31 @@ body::before {
   flex-shrink: 0;
 }
 
-.holo-sprite-img.pixelated-sprite {
+.holo-sprite-img.pixelated-sprite,
+.holo-sprite-img.sprite-style-gba,
+.holo-sprite-img.sprite-style-ds {
   image-rendering: pixelated !important;
   image-rendering: -moz-crisp-edges !important;
   image-rendering: crisp-edges !important;
   max-width: 160px;
   max-height: 160px;
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.7)) !important;
 }
 
 .holo-sprite-img.showdown-3d-xbr,
+.holo-sprite-img.sprite-style-showdown,
 .holo-sprite-img.showdown-3d-enhanced {
-  image-rendering: auto;
-  image-rendering: -webkit-optimize-contrast;
+  image-rendering: pixelated !important;
+  image-rendering: -moz-crisp-edges !important;
+  image-rendering: crisp-edges !important;
   max-width: 210px;
   max-height: 210px;
-  filter: contrast(1.06) brightness(1.03) saturate(1.12) drop-shadow(0 12px 20px rgba(0, 0, 0, 0.75));
+  filter: url(#showdown-xbr-2x) drop-shadow(0 12px 20px rgba(0, 0, 0, 0.75)) !important;
+}
+
+.holo-sprite-img.sprite-style-official {
+  image-rendering: auto;
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.7));
 }
 
 /* Modal Elemental Badges */
