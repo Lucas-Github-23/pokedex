@@ -313,6 +313,7 @@ export const App: React.FC = () => {
       {/* Dual-Screen Diagnostic Terminal Modal */}
       <PokemonModal
         pokemonId={selectedPokemonId}
+        initialPokemon={selectedPokemonId ? allPokemon.find((p) => p.id === selectedPokemonId) : undefined}
         onClose={() => setSelectedPokemonId(null)}
         onSelectPokemon={setSelectedPokemonId}
         isFavorite={selectedPokemonId ? isFavorite(selectedPokemonId) : false}
