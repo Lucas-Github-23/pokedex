@@ -21,6 +21,8 @@ interface FilterBarProps {
   onlyFavorites?: boolean;
   onToggleOnlyFavorites?: (val: boolean) => void;
   favoritesCount?: number;
+  onOpenAdvancedFilters?: () => void;
+  activeAdvancedCount?: number;
 }
 
 export const FilterBar: React.FC<FilterBarProps> = ({
@@ -38,6 +40,8 @@ export const FilterBar: React.FC<FilterBarProps> = ({
   onlyFavorites = false,
   onToggleOnlyFavorites,
   favoritesCount = 0,
+  onOpenAdvancedFilters,
+  activeAdvancedCount = 0,
 }) => {
   const searchInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -61,27 +65,45 @@ export const FilterBar: React.FC<FilterBarProps> = ({
   return (
     <div className="filter-assembly">
       {/* Scanner Frequency Search Bar */}
-      <div className="scanner-search-box">
-        <Crosshair size={20} className="scanner-icon" />
-        <input
-          ref={searchInputRef}
-          type="text"
-          className="scanner-input"
-          value={searchTerm}
-          onChange={(e) => onSearchChange(e.target.value)}
-          placeholder="Rastrear espécime por nome, código (#025), tipo (fogo), região ou 'favoritos'..."
-          aria-label="Buscar Pokémon no Scanner"
-        />
-        {searchTerm && (
+      <div className="scanner-search-row">
+        <div className="scanner-search-box">
+          <Crosshair size={20} className="scanner-icon" />
+          <input
+            ref={searchInputRef}
+            type="text"
+            className="scanner-input"
+            value={searchTerm}
+            onChange={(e) => onSearchChange(e.target.value)}
+            placeholder="Rastrear espécime por nome, código (#025), tipo (fogo), região ou 'favoritos'..."
+            aria-label="Buscar Pokémon no Scanner"
+          />
+          {searchTerm && (
+            <button
+              className="search-clear-btn"
+              onClick={() => onSearchChange('')}
+              title="Limpar rastreador"
+            >
+              <X size={16} />
+            </button>
+          )}
+          <span className="scanner-shortcut">RADAR [/]</span>
+        </div>
+
+        {/* Dedicated Advanced Filters Trigger Button */}
+        {onOpenAdvancedFilters && (
           <button
-            className="search-clear-btn"
-            onClick={() => onSearchChange('')}
-            title="Limpar rastreador"
+            type="button"
+            className={`adv-filter-trigger-btn ${activeAdvancedCount > 0 ? 'active' : ''}`}
+            onClick={onOpenAdvancedFilters}
+            title="Abrir Central de Filtragem Avançada"
           >
-            <X size={16} />
+            <SlidersHorizontal size={15} color={activeAdvancedCount > 0 ? '#fff' : 'var(--poke-cyan)'} />
+            <span>FILTROS AVANÇADOS</span>
+            {activeAdvancedCount > 0 && (
+              <span className="adv-trigger-count-badge">{activeAdvancedCount}</span>
+            )}
           </button>
         )}
-        <span className="scanner-shortcut">RADAR [/]</span>
       </div>
 
       {/* Generation Hardware Cartridges */}
@@ -207,10 +229,28 @@ export const FilterBar: React.FC<FilterBarProps> = ({
             onChange={(e) => onSortChange(e.target.value as SortKey)}
             aria-label="Ordenação de espécimes"
           >
-            <option value="id-asc">CÓDIGO (# CRESCENTE)</option>
-            <option value="id-desc">CÓDIGO (# DECRESCENTE)</option>
-            <option value="name-asc">NOME (A - Z)</option>
-            <option value="name-desc">NOME (Z - A)</option>
+            <optgroup label="Básica">
+              <option value="id-asc">CÓDIGO (# CRESCENTE)</option>
+              <option value="id-desc">CÓDIGO (# DECRESCENTE)</option>
+              <option value="name-asc">NOME (A - Z)</option>
+              <option value="name-desc">NOME (Z - A)</option>
+            </optgroup>
+            <optgroup label="Atributos & BST">
+              <option value="bst-desc">MAIOR BST TOTAL (PODER)</option>
+              <option value="bst-asc">MENOR BST TOTAL</option>
+              <option value="hp-desc">MAIOR HP (VIDA)</option>
+              <option value="atk-desc">MAIOR ATAQUE FÍSICO</option>
+              <option value="def-desc">MAIOR DEFESA FÍSICA</option>
+              <option value="spa-desc">MAIOR ATAQUE ESPECIAL</option>
+              <option value="spd-desc">MAIOR DEFESA ESPECIAL</option>
+              <option value="spe-desc">MAIOR VELOCIDADE</option>
+            </optgroup>
+            <optgroup label="Biometria">
+              <option value="weight-desc">MAIS PESADO</option>
+              <option value="weight-asc">MAIS LEVE</option>
+              <option value="height-desc">MAIS ALTO / LONGO</option>
+              <option value="height-asc">MAIS BAIXO / COMPACTO</option>
+            </optgroup>
           </select>
         </div>
       </div>

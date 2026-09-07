@@ -4,15 +4,30 @@ import { FilterBar } from './components/FilterBar';
 import { PokemonList } from './components/PokemonList';
 import { PokemonModal } from './components/PokemonModal';
 import { FavoritesDrawer } from './components/FavoritesDrawer';
+import { AdvancedFilterModal } from './components/AdvancedFilterModal';
+import { ActiveFilterChips } from './components/ActiveFilterChips';
 import { useFavorites } from './hooks/useFavorites';
 import {
   fetchAllPokemonList,
   fetchPokemonByType,
 } from './services/pokeapi';
-import type { PokemonListItem, GenerationKey, SortKey } from './types/pokemon';
+import {
+  DEFAULT_ADVANCED_FILTERS,
+  type AdvancedFilters,
+  type PokemonListItem,
+  type GenerationKey,
+  type SortKey,
+} from './types/pokemon';
 import { GENERATIONS } from './constants/pokemonData';
+import { POKEMON_BASE_DATA } from './constants/pokemonBaseData';
 import type { SpriteStyle } from './constants/spriteStyles';
 import { KNOWN_ALTERNATIVE_FORMS } from './constants/pokemonForms';
+import {
+  countActiveFilters,
+  getActiveFilterChips,
+  HEIGHT_CLASSES,
+  WEIGHT_CLASSES,
+} from './utils/filterHelpers';
 
 const PAGE_SIZE = 36;
 
@@ -28,6 +43,10 @@ export const App: React.FC = () => {
   const [sortKey, setSortKey] = useState<SortKey>('id-asc');
   const [spriteStyle, setSpriteStyle] = useState<SpriteStyle>('official');
   const [onlyFavorites, setOnlyFavorites] = useState<boolean>(false);
+
+  // Advanced Filters & Modal state
+  const [advancedFilters, setAdvancedFilters] = useState<AdvancedFilters>(DEFAULT_ADVANCED_FILTERS);
+  const [isAdvancedModalOpen, setIsAdvancedModalOpen] = useState<boolean>(false);
 
   // Modal & Drawer states
   const [selectedPokemonId, setSelectedPokemonId] = useState<number | null>(null);
@@ -99,7 +118,7 @@ export const App: React.FC = () => {
   // Reset pagination on filter change
   useEffect(() => {
     setVisibleCount(PAGE_SIZE);
-  }, [searchTerm, selectedGeneration, selectedType, sortKey, onlyFavorites]);
+  }, [searchTerm, selectedGeneration, selectedType, sortKey, onlyFavorites, advancedFilters]);
 
   // Filter and Sort Pipeline
   const filteredAndSortedPokemon = useMemo(() => {
@@ -173,18 +192,155 @@ export const App: React.FC = () => {
       }
     }
 
-    // 4. Generation filter
-    if (!onlyFavorites && selectedGeneration !== 'all') {
-      const genConfig = GENERATIONS.find((g) => g.id === selectedGeneration);
-      if (genConfig) {
-        list = list.filter(
-          (p) => p.id >= genConfig.range[0] && p.id <= genConfig.range[1]
-        );
+    // 4. Generation filter (single or multi-selection from advanced filters)
+    if (!onlyFavorites) {
+      if (advancedFilters.generations.length > 0) {
+        list = list.filter((p) => {
+          return advancedFilters.generations.some((genId) => {
+            const genConfig = GENERATIONS.find((g) => g.id === genId);
+            return genConfig && p.id >= genConfig.range[0] && p.id <= genConfig.range[1];
+          });
+        });
+      } else if (selectedGeneration !== 'all') {
+        const genConfig = GENERATIONS.find((g) => g.id === selectedGeneration);
+        if (genConfig) {
+          list = list.filter(
+            (p) => p.id >= genConfig.range[0] && p.id <= genConfig.range[1]
+          );
+        }
       }
     }
 
-    // 5. Sorting
+    // 5. Advanced Type Filtering (primaryType, secondaryType, typeMode)
+    if (advancedFilters.primaryType || advancedFilters.secondaryType || advancedFilters.typeMode !== 'any') {
+      list = list.filter((p) => {
+        const types = p.types || [];
+        const prim = advancedFilters.primaryType;
+        const sec = advancedFilters.secondaryType;
+
+        if (advancedFilters.typeMode === 'mono') {
+          if (types.length !== 1) return false;
+          if (prim && types[0] !== prim) return false;
+          return true;
+        }
+
+        if (advancedFilters.typeMode === 'dual') {
+          if (types.length < 2) return false;
+          if (prim && !types.includes(prim)) return false;
+          if (sec && !types.includes(sec)) return false;
+          return true;
+        }
+
+        if (advancedFilters.typeMode === 'exact') {
+          if (prim && sec) {
+            return types.length === 2 && types.includes(prim) && types.includes(sec);
+          }
+          if (prim) {
+            return types.length === 1 && types[0] === prim;
+          }
+          return true;
+        }
+
+        // Default 'any' type mode
+        if (prim && !types.includes(prim)) return false;
+        if (sec && !types.includes(sec)) return false;
+        return true;
+      });
+    }
+
+    // 6. Categories (Starters, Legendaries, Mythicals, Paradox, Ultra Beasts, Babies, Fossils, Pseudo-Legendaries, Forms)
+    if (advancedFilters.categories.length > 0) {
+      list = list.filter((p) => {
+        const base = POKEMON_BASE_DATA[p.id];
+        if (!base) return false;
+
+        return advancedFilters.categories.some((cat) => {
+          if (cat === 'forms') {
+            return Boolean(KNOWN_ALTERNATIVE_FORMS[p.id]?.length);
+          }
+          return base.category === cat;
+        });
+      });
+    }
+
+    // 7. Evolution Stages
+    if (advancedFilters.evolutionStages.length > 0) {
+      list = list.filter((p) => {
+        const base = POKEMON_BASE_DATA[p.id];
+        return base && advancedFilters.evolutionStages.includes(base.stage);
+      });
+    }
+
+    // 8. BST Range
+    if (advancedFilters.minBst > 180 || advancedFilters.maxBst < 780) {
+      list = list.filter((p) => {
+        const bst = POKEMON_BASE_DATA[p.id]?.bst || 300;
+        return bst >= advancedFilters.minBst && bst <= advancedFilters.maxBst;
+      });
+    }
+
+    // 9. Dominant Stat (Specialty)
+    if (advancedFilters.dominantStat) {
+      list = list.filter((p) => {
+        const b = POKEMON_BASE_DATA[p.id];
+        if (!b) return false;
+        const statMap: Record<string, number> = {
+          hp: b.hp,
+          atk: b.atk,
+          def: b.def,
+          spa: b.spa,
+          spd: b.spd,
+          spe: b.spe,
+        };
+        const targetVal = statMap[advancedFilters.dominantStat] || 0;
+        return Object.values(statMap).every((val) => targetVal >= val);
+      });
+    }
+
+    // 10. Minimum Stat Thresholds
+    const minStats = advancedFilters.minStat;
+    if (Object.values(minStats).some((v) => v > 0)) {
+      list = list.filter((p) => {
+        const b = POKEMON_BASE_DATA[p.id];
+        if (!b) return false;
+        return (
+          b.hp >= minStats.hp &&
+          b.atk >= minStats.atk &&
+          b.def >= minStats.def &&
+          b.spa >= minStats.spa &&
+          b.spd >= minStats.spd &&
+          b.spe >= minStats.spe
+        );
+      });
+    }
+
+    // 11. Height Class
+    if (advancedFilters.heightClass !== 'any') {
+      const range = HEIGHT_CLASSES[advancedFilters.heightClass];
+      if (range) {
+        list = list.filter((p) => {
+          const h = POKEMON_BASE_DATA[p.id]?.heightM || 1.0;
+          return h >= range.min && h < range.max;
+        });
+      }
+    }
+
+    // 12. Weight Class
+    if (advancedFilters.weightClass !== 'any') {
+      const range = WEIGHT_CLASSES[advancedFilters.weightClass];
+      if (range) {
+        list = list.filter((p) => {
+          const w = POKEMON_BASE_DATA[p.id]?.weightKg || 20.0;
+          return w >= range.min && w < range.max;
+        });
+      }
+    }
+
+    // 13. Sorting
     list.sort((a, b) => {
+      const baseA = POKEMON_BASE_DATA[a.id] || { bst: 0, hp: 0, atk: 0, def: 0, spa: 0, spd: 0, spe: 0, weightKg: 0, heightM: 0 };
+      const baseB = POKEMON_BASE_DATA[b.id] || { bst: 0, hp: 0, atk: 0, def: 0, spa: 0, spd: 0, spe: 0, weightKg: 0, heightM: 0 };
+
       switch (sortKey) {
         case 'id-asc':
           return a.id - b.id;
@@ -194,13 +350,51 @@ export const App: React.FC = () => {
           return a.name.localeCompare(b.name);
         case 'name-desc':
           return b.name.localeCompare(a.name);
+        case 'bst-desc':
+          return baseB.bst - baseA.bst;
+        case 'bst-asc':
+          return baseA.bst - baseB.bst;
+        case 'hp-desc':
+          return baseB.hp - baseA.hp;
+        case 'atk-desc':
+          return baseB.atk - baseA.atk;
+        case 'def-desc':
+          return baseB.def - baseA.def;
+        case 'spa-desc':
+          return baseB.spa - baseA.spa;
+        case 'spd-desc':
+          return baseB.spd - baseA.spd;
+        case 'spe-desc':
+          return baseB.spe - baseA.spe;
+        case 'weight-desc':
+          return baseB.weightKg - baseA.weightKg;
+        case 'weight-asc':
+          return baseA.weightKg - baseB.weightKg;
+        case 'height-desc':
+          return baseB.heightM - baseA.heightM;
+        case 'height-asc':
+          return baseA.heightM - baseB.heightM;
         default:
           return a.id - b.id;
       }
     });
 
     return list;
-  }, [allPokemon, typeFilteredList, onlyFavorites, isFavorite, searchTerm, selectedGeneration, selectedType, sortKey]);
+  }, [
+    allPokemon,
+    typeFilteredList,
+    onlyFavorites,
+    isFavorite,
+    searchTerm,
+    selectedGeneration,
+    selectedType,
+    sortKey,
+    advancedFilters,
+  ]);
+
+  // Active filters count & chips
+  const activeAdvancedCount = useMemo(() => countActiveFilters(advancedFilters), [advancedFilters]);
+  const activeChips = useMemo(() => getActiveFilterChips(advancedFilters, setAdvancedFilters), [advancedFilters]);
 
   // Paginated visible slice
   const visiblePokemon = useMemo(() => {
@@ -219,6 +413,7 @@ export const App: React.FC = () => {
     setSelectedType('');
     setSortKey('id-asc');
     setOnlyFavorites(false);
+    setAdvancedFilters(DEFAULT_ADVANCED_FILTERS);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
@@ -280,6 +475,15 @@ export const App: React.FC = () => {
             onlyFavorites={onlyFavorites}
             onToggleOnlyFavorites={setOnlyFavorites}
             favoritesCount={favoritesCount}
+            onOpenAdvancedFilters={() => setIsAdvancedModalOpen(true)}
+            activeAdvancedCount={activeAdvancedCount}
+          />
+
+          {/* Active Filter Chips Bar */}
+          <ActiveFilterChips
+            chips={activeChips}
+            onClearAll={() => setAdvancedFilters(DEFAULT_ADVANCED_FILTERS)}
+            resultsCount={filteredAndSortedPokemon.length}
           />
 
           {/* Pokemon Specimen Grid */}
@@ -310,6 +514,16 @@ export const App: React.FC = () => {
         </span>
       </footer>
 
+      {/* Advanced Filters Terminal Modal */}
+      <AdvancedFilterModal
+        isOpen={isAdvancedModalOpen}
+        onClose={() => setIsAdvancedModalOpen(false)}
+        filters={advancedFilters}
+        onApplyFilters={setAdvancedFilters}
+        onResetFilters={() => setAdvancedFilters(DEFAULT_ADVANCED_FILTERS)}
+        totalFilteredCount={filteredAndSortedPokemon.length}
+      />
+
       {/* Dual-Screen Diagnostic Terminal Modal */}
       {selectedPokemonId !== null && (
         <PokemonModal
@@ -339,4 +553,5 @@ export const App: React.FC = () => {
 };
 
 export default App;
+
 

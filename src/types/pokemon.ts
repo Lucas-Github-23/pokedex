@@ -105,5 +105,82 @@ export interface PokemonSpeciesData {
 
 export type GenerationKey = 'all' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9';
 
-export type SortKey = 'id-asc' | 'id-desc' | 'name-asc' | 'name-desc' | 'stat-desc';
+export type SortKey =
+  | 'id-asc'
+  | 'id-desc'
+  | 'name-asc'
+  | 'name-desc'
+  | 'bst-desc'
+  | 'bst-asc'
+  | 'hp-desc'
+  | 'atk-desc'
+  | 'def-desc'
+  | 'spa-desc'
+  | 'spd-desc'
+  | 'spe-desc'
+  | 'weight-desc'
+  | 'weight-asc'
+  | 'height-desc'
+  | 'height-asc';
+
+export type EvolutionStageFilter = 'base' | 'middle' | 'final' | 'single';
+
+export type CategoryFilter =
+  | 'starter'
+  | 'legendary'
+  | 'mythical'
+  | 'paradox'
+  | 'ultrabeast'
+  | 'baby'
+  | 'fossil'
+  | 'pseudolegendary'
+  | 'forms';
+
+export type HeightClassFilter = 'any' | 'small' | 'medium' | 'large' | 'colossal';
+export type WeightClassFilter = 'any' | 'feather' | 'light' | 'medium' | 'heavy' | 'colossal';
+export type TypeFilterMode = 'any' | 'mono' | 'dual' | 'exact';
+
+export interface AdvancedFilters {
+  primaryType: string;
+  secondaryType: string;
+  typeMode: TypeFilterMode;
+  generations: string[];
+  categories: CategoryFilter[];
+  evolutionStages: EvolutionStageFilter[];
+  minBst: number;
+  maxBst: number;
+  dominantStat: string;
+  minStat: {
+    hp: number;
+    atk: number;
+    def: number;
+    spa: number;
+    spd: number;
+    spe: number;
+  };
+  heightClass: HeightClassFilter;
+  weightClass: WeightClassFilter;
+}
+
+export const DEFAULT_ADVANCED_FILTERS: AdvancedFilters = {
+  primaryType: '',
+  secondaryType: '',
+  typeMode: 'any',
+  generations: [],
+  categories: [],
+  evolutionStages: [],
+  minBst: 180,
+  maxBst: 780,
+  dominantStat: '',
+  minStat: {
+    hp: 0,
+    atk: 0,
+    def: 0,
+    spa: 0,
+    spd: 0,
+    spe: 0,
+  },
+  heightClass: 'any',
+  weightClass: 'any',
+};
 
