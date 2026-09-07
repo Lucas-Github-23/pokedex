@@ -8,7 +8,7 @@ import type {
 } from '../types/pokemon';
 import { GAME_VERSION_COLORS } from '../constants/pokemonData';
 import { POKEMON_TYPES_MAP } from '../constants/pokemonTypes';
-import { formatVarietyInfo } from '../constants/pokemonForms';
+import { formatVarietyInfo, isMeaningfulVariety } from '../constants/pokemonForms';
 
 const BASE_URL = 'https://pokeapi.co/api/v2';
 
@@ -158,20 +158,22 @@ export async function fetchPokemonSpecies(speciesUrl: string): Promise<PokemonSp
     );
     const genus = genusEntry?.genus || 'Pokémon';
 
-    // Parse varieties
-    const varieties: PokemonVariety[] = (data.varieties || []).map((v: any) => {
-      const varietyId = getPokemonIdFromUrl(v.pokemon.url);
-      const info = formatVarietyInfo(v.pokemon.name, data.name || '', v.is_default);
-      return {
-        id: varietyId,
-        name: v.pokemon.name,
-        url: v.pokemon.url,
-        is_default: v.is_default,
-        displayName: info.displayName,
-        category: info.category,
-        tag: info.tag,
-      };
-    });
+    // Parse varieties, filtering out non-visual/phantom internal ride forms
+    const varieties: PokemonVariety[] = (data.varieties || [])
+      .filter((v: any) => isMeaningfulVariety(v.pokemon.name, v.is_default))
+      .map((v: any) => {
+        const varietyId = getPokemonIdFromUrl(v.pokemon.url);
+        const info = formatVarietyInfo(v.pokemon.name, data.name || '', v.is_default);
+        return {
+          id: varietyId,
+          name: v.pokemon.name,
+          url: v.pokemon.url,
+          is_default: v.is_default,
+          displayName: info.displayName,
+          category: info.category,
+          tag: info.tag,
+        };
+      });
 
     const result: PokemonSpeciesData = {
       evolutionChainUrl: data.evolution_chain?.url || '',

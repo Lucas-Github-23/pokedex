@@ -7,6 +7,49 @@ export interface FormBadgeInfo {
   color: string;
 }
 
+/**
+ * Patterns of internal PokéAPI entries that are non-battle ride modes,
+ * in-turn ability states, or duplicates without any distinct official artwork or battle sprites.
+ */
+const IGNORED_FORM_PATTERNS = [
+  '-low-power-mode',
+  '-drive-mode',
+  '-aquatic-mode',
+  '-glide-mode',
+  '-limited-build',
+  '-sprinting-build',
+  '-swimming-build',
+  '-gliding-build',
+  '-starter',
+  '-busted',
+  '-gulping',
+  '-gorging',
+  '-hangry',
+  '-own-tempo',
+  '-antique',
+  '-dada',
+];
+
+/**
+ * Checks if a species variety is a genuine distinct visual/battle form.
+ */
+export function isMeaningfulVariety(varietyName: string, isDefault: boolean): boolean {
+  if (isDefault) return true;
+  const clean = varietyName.toLowerCase();
+
+  // Exclude ignored phantom patterns
+  if (IGNORED_FORM_PATTERNS.some((pat) => clean.endsWith(pat) || clean.includes(pat))) {
+    return false;
+  }
+
+  // Filter out redundant Minior meteor color clones (keep only standard meteor)
+  if (clean.startsWith('minior-') && clean.endsWith('-meteor') && !clean.includes('red-meteor')) {
+    return false;
+  }
+
+  return true;
+}
+
 export function formatVarietyInfo(
   varietyName: string,
   baseSpeciesName: string,
