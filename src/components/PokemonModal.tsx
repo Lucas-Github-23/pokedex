@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import {
   X,
   ChevronLeft,
@@ -18,6 +19,7 @@ import {
   AlertTriangle,
   RotateCcw,
 } from 'lucide-react';
+import { ErrorBoundary } from './ErrorBoundary';
 import type {
   PokemonDetail,
   EvolutionStage,
@@ -243,18 +245,32 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
 
   const currentJapanese = japaneseName || initialPokemon?.japaneseName || getJapaneseName(pokemonId);
 
-  return (
+  // Lock background scroll while modal is active
+  useEffect(() => {
+    if (pokemonId) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+  }, [pokemonId]);
+
+  if (!pokemonId) return null;
+
+  return createPortal(
     <div className="diagnostic-overlay" onClick={onClose} role="dialog" aria-modal="true">
-      <div
-        className="diagnostic-terminal"
-        onClick={(e) => e.stopPropagation()}
-        style={
-          {
-            '--modal-glow-color': typeConfig.glow,
-            '--modal-type-color': typeConfig.color,
-          } as React.CSSProperties
-        }
-      >
+      <ErrorBoundary fallbackTitle="TELEMETRIA DO ESPÉCIME INTERROMPIDA" onReset={() => loadData(pokemonId)}>
+        <div
+          className="diagnostic-terminal"
+          onClick={(e) => e.stopPropagation()}
+          style={
+            {
+              '--modal-glow-color': typeConfig.glow,
+              '--modal-type-color': typeConfig.color,
+            } as React.CSSProperties
+          }
+        >
         {/* Top Hardware Header Bar: Identity + Top Controls */}
         <div className="terminal-top-header">
           <div className="terminal-title-bar">
@@ -669,6 +685,8 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
           </div>
         </div>
       </div>
-    </div>
+      </ErrorBoundary>
+    </div>,
+    document.body
   );
 };

@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Trash2, Heart, Grid, Sparkles } from 'lucide-react';
 import type { PokemonListItem } from '../types/pokemon';
 import { POKEMON_TYPES } from '../constants/pokemonData';
@@ -25,9 +26,19 @@ export const FavoritesDrawer: React.FC<FavoritesDrawerProps> = ({
   onClearAll,
   onViewInMainGrid,
 }) => {
+  useEffect(() => {
+    if (isOpen) {
+      const orig = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = orig;
+      };
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
-  return (
+  return createPortal(
     <div className="drawer-backdrop" onClick={onClose} role="dialog" aria-modal="true">
       <div className="favorites-drawer" onClick={(e) => e.stopPropagation()}>
         {/* Drawer Header */}
@@ -170,7 +181,8 @@ export const FavoritesDrawer: React.FC<FavoritesDrawerProps> = ({
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
