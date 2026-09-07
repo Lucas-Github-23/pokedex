@@ -6,6 +6,7 @@ import { PokemonModal } from './components/PokemonModal';
 import { FavoritesDrawer } from './components/FavoritesDrawer';
 import { AdvancedFilterModal } from './components/AdvancedFilterModal';
 import { ActiveFilterChips } from './components/ActiveFilterChips';
+import { DrawingShaderFilters } from './components/DrawingShaderFilters';
 import { useFavorites } from './hooks/useFavorites';
 import {
   fetchAllPokemonList,
@@ -20,7 +21,7 @@ import {
 } from './types/pokemon';
 import { GENERATIONS } from './constants/pokemonData';
 import { POKEMON_BASE_DATA } from './constants/pokemonBaseData';
-import type { SpriteStyle } from './constants/spriteStyles';
+import type { SpriteStyle, EmulatorShader } from './constants/spriteStyles';
 import { KNOWN_ALTERNATIVE_FORMS } from './constants/pokemonForms';
 import {
   countActiveFilters,
@@ -42,6 +43,7 @@ export const App: React.FC = () => {
   const [selectedType, setSelectedType] = useState<string>('');
   const [sortKey, setSortKey] = useState<SortKey>('id-asc');
   const [spriteStyle, setSpriteStyle] = useState<SpriteStyle>('official');
+  const [emulatorShader, setEmulatorShader] = useState<EmulatorShader>('none');
   const [onlyFavorites, setOnlyFavorites] = useState<boolean>(false);
 
   // Advanced Filters & Modal state
@@ -419,6 +421,9 @@ export const App: React.FC = () => {
 
   return (
     <div className="pokedex-chassis">
+      {/* SVG Hand-Drawn Edge Inking & Lineart Shader Filters */}
+      <DrawingShaderFilters />
+
       {/* Top Hardware Bar: Sensor Lens + Indicator LEDs + HUD */}
       <Navbar
         favoritesCount={favoritesCount}
@@ -472,6 +477,8 @@ export const App: React.FC = () => {
             resultsCount={filteredAndSortedPokemon.length}
             selectedSpriteStyle={spriteStyle}
             onSelectSpriteStyle={setSpriteStyle}
+            selectedShader={emulatorShader}
+            onSelectShader={setEmulatorShader}
             onlyFavorites={onlyFavorites}
             onToggleOnlyFavorites={setOnlyFavorites}
             favoritesCount={favoritesCount}
@@ -497,6 +504,7 @@ export const App: React.FC = () => {
             onLoadMore={handleLoadMore}
             totalFilteredCount={filteredAndSortedPokemon.length}
             spriteStyle={spriteStyle}
+            shader={emulatorShader}
             onlyFavorites={onlyFavorites}
           />
         </main>
@@ -535,6 +543,7 @@ export const App: React.FC = () => {
           onToggleFavorite={toggleFavorite}
           totalPokemonCount={allPokemon.length || 1025}
           initialSpriteStyle={spriteStyle}
+          initialShader={emulatorShader}
         />
       )}
 

@@ -1,10 +1,10 @@
 import React, { useRef, useEffect } from 'react';
-import { Crosshair, X, SlidersHorizontal, Gamepad2, Heart } from 'lucide-react';
+import { Crosshair, X, SlidersHorizontal, Gamepad2, Heart, PenTool } from 'lucide-react';
 import { POKEMON_TYPES, GENERATIONS } from '../constants/pokemonData';
 import { TypeIcon } from './TypeIcon';
 import type { GenerationKey, SortKey } from '../types/pokemon';
-import type { SpriteStyle } from '../constants/spriteStyles';
-import { SPRITE_STYLES } from '../constants/spriteStyles';
+import type { SpriteStyle, EmulatorShader } from '../constants/spriteStyles';
+import { SPRITE_STYLES, EMULATOR_SHADERS } from '../constants/spriteStyles';
 
 interface FilterBarProps {
   searchTerm: string;
@@ -18,6 +18,8 @@ interface FilterBarProps {
   resultsCount: number;
   selectedSpriteStyle: SpriteStyle;
   onSelectSpriteStyle: (style: SpriteStyle) => void;
+  selectedShader?: EmulatorShader;
+  onSelectShader?: (shader: EmulatorShader) => void;
   onlyFavorites?: boolean;
   onToggleOnlyFavorites?: (val: boolean) => void;
   favoritesCount?: number;
@@ -37,6 +39,8 @@ export const FilterBar: React.FC<FilterBarProps> = ({
   resultsCount,
   selectedSpriteStyle,
   onSelectSpriteStyle,
+  selectedShader = 'none',
+  onSelectShader,
   onlyFavorites = false,
   onToggleOnlyFavorites,
   favoritesCount = 0,
@@ -213,6 +217,30 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           ))}
         </div>
       </div>
+
+      {/* Hand-Drawn Lineart Shader Selector Bar */}
+      {onSelectShader && (
+        <div className="shader-selector-bar">
+          <div className="shader-selector-label">
+            <PenTool size={16} color="var(--poke-cyan)" />
+            <span>TRAÇADO DE LINHAS (DESENHO):</span>
+          </div>
+          <div className="shader-selector-chips">
+            {EMULATOR_SHADERS.map((sh) => (
+              <button
+                key={sh.id}
+                type="button"
+                className={`shader-hardware-btn ${selectedShader === sh.id ? 'active' : ''}`}
+                onClick={() => onSelectShader(sh.id)}
+                title={sh.description}
+              >
+                <span className="shader-chip-badge">{sh.tag}</span>
+                <span className="shader-chip-title">{sh.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* HUD Telemetry Readout & Sort */}
       <div className="hud-controls-bar">

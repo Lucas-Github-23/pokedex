@@ -1,7 +1,16 @@
 export type SpriteStyle = 'official' | 'showdown' | 'ds' | 'gba';
+export type EmulatorShader = 'none' | 'ink' | 'comic' | 'sketch' | 'toon' | 'crosshatch';
 
 export interface SpriteStyleOption {
   id: SpriteStyle;
+  label: string;
+  tag: string;
+  badge: string;
+  description: string;
+}
+
+export interface ShaderOption {
+  id: EmulatorShader;
   label: string;
   tag: string;
   badge: string;
@@ -36,6 +45,51 @@ export const SPRITE_STYLES: SpriteStyleOption[] = [
     tag: 'GBA',
     badge: 'GEN 3',
     description: 'Sprites retrô pixel-art 16-bit de Pokémon Emerald, FireRed e Smogon',
+  },
+];
+
+export const EMULATOR_SHADERS: ShaderOption[] = [
+  {
+    id: 'none',
+    label: 'Original (Sem Traçado)',
+    tag: 'OFF',
+    badge: 'PADRÃO',
+    description: 'Renderização padrão limpa sem efeitos de traçado',
+  },
+  {
+    id: 'ink',
+    label: 'Traçado Anime / Nanquim',
+    tag: 'ANIME',
+    badge: 'NANQUIM',
+    description: 'Transforma os pixels em traços de caneta nanquim e linhas de contorno de desenho japonês',
+  },
+  {
+    id: 'comic',
+    label: 'Traçado HQ / Quadrinhos',
+    tag: 'HQ',
+    badge: 'COMIC',
+    description: 'Traços pretos de contorno marcados com coloração cel estilo história em quadrinhos',
+  },
+  {
+    id: 'sketch',
+    label: 'Esboço Mangá / Grafite',
+    tag: 'ESBOÇO',
+    badge: 'MANGÁ',
+    description: 'Converte as formas e pixels em linhas de grafite e traçados finos de mangá',
+  },
+  {
+    id: 'toon',
+    label: 'Contorno Vetorial / Toon',
+    tag: 'TOON',
+    badge: 'VETOR',
+    description: 'Contornos pretos nítidos ao redor de todas as formas transformando o sprite em desenho animado',
+  },
+  {
+    id: 'crosshatch',
+    label: 'Traçado Hachurado (Gravura)',
+    tag: 'HACHURA',
+    badge: 'GRAVURA',
+    description: 'Linhas finas de hachura e traçados cruzados de desenho clássico',
   },
 ];
 

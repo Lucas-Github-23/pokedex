@@ -6,7 +6,7 @@ import { POKEMON_TYPES_MAP } from '../constants/pokemonTypes';
 import { getJapaneseName } from '../constants/japaneseNames';
 import { KNOWN_ALTERNATIVE_FORMS } from '../constants/pokemonForms';
 import { TypeIcon } from './TypeIcon';
-import type { SpriteStyle } from '../constants/spriteStyles';
+import type { SpriteStyle, EmulatorShader } from '../constants/spriteStyles';
 import {
   getPokemonSpriteUrl,
   getSpriteFallbackChain,
@@ -19,6 +19,7 @@ interface PokemonCardProps {
   onToggleFavorite: (pokemon: PokemonListItem, event?: React.MouseEvent) => void;
   onSelect: (id: number) => void;
   spriteStyle?: SpriteStyle;
+  shader?: EmulatorShader;
 }
 
 export const PokemonCard: React.FC<PokemonCardProps> = ({
@@ -27,6 +28,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
   onToggleFavorite,
   onSelect,
   spriteStyle = 'official',
+  shader = 'none',
 }) => {
   const formattedId = `№ ${String(pokemon.id).padStart(4, '0')}`;
   const resolvedTypes =
@@ -98,6 +100,9 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
       {/* Recessed Sub-Screen / Specimen Viewport */}
       <div className="specimen-sprite-box">
         <div className="specimen-subscreen-bevel" />
+        {shader && shader !== 'none' && (
+          <div className={`shader-overlay-${shader}`} aria-hidden="true" />
+        )}
         {japaneseText && (
           <div className="specimen-box-watermark" aria-hidden="true">
             {japaneseText}
@@ -113,10 +118,10 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
           </div>
         )}
         <img
-          key={`${pokemon.id}-${spriteStyle}`}
+          key={`${pokemon.id}-${spriteStyle}-${shader}`}
           src={spriteUrl}
           alt={pokemon.name}
-          className={`specimen-sprite-img sprite-style-${spriteStyle} ${
+          className={`specimen-sprite-img sprite-style-${spriteStyle} sprite-shader-${shader} ${
             spriteStyle === 'gba' || spriteStyle === 'ds' ? 'pixelated-sprite' : ''
           } ${spriteStyle === 'showdown' ? 'showdown-3d-enhanced' : ''}`}
           loading="lazy"

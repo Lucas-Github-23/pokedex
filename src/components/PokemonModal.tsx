@@ -18,6 +18,7 @@ import {
   Layers,
   AlertTriangle,
   RotateCcw,
+  PenTool,
 } from 'lucide-react';
 import { ErrorBoundary } from './ErrorBoundary';
 import type {
@@ -40,9 +41,10 @@ import { FORM_CATEGORY_CONFIG } from '../constants/pokemonForms';
 import { TypeIcon } from './TypeIcon';
 import { EvolutionChain } from './EvolutionChain';
 import { GameLocations } from './GameLocations';
-import type { SpriteStyle } from '../constants/spriteStyles';
+import type { SpriteStyle, EmulatorShader } from '../constants/spriteStyles';
 import {
   SPRITE_STYLES,
+  EMULATOR_SHADERS,
   getPokemonSpriteUrl,
   getSpriteFallbackChain,
 } from '../constants/spriteStyles';
@@ -56,6 +58,7 @@ interface PokemonModalProps {
   onToggleFavorite: (pokemon: PokemonListItem, event?: React.MouseEvent) => void;
   totalPokemonCount?: number;
   initialSpriteStyle?: SpriteStyle;
+  initialShader?: EmulatorShader;
 }
 
 type TabType = 'stats' | 'evolution' | 'locations';
@@ -69,6 +72,7 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
   onToggleFavorite,
   totalPokemonCount = 1025,
   initialSpriteStyle = 'official',
+  initialShader = 'none',
 }) => {
   const [detail, setDetail] = useState<PokemonDetail | null>(null);
   const [flavorText, setFlavorText] = useState<string>('');
@@ -85,6 +89,7 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
   const [isShiny, setIsShiny] = useState<boolean>(false);
   const [isPlayingCry, setIsPlayingCry] = useState<boolean>(false);
   const [modalSpriteStyle, setModalSpriteStyle] = useState<SpriteStyle>(initialSpriteStyle);
+  const [modalShader, setModalShader] = useState<EmulatorShader>(initialShader);
   const [spriteFallbackIdx, setSpriteFallbackIdx] = useState<number>(0);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -92,6 +97,10 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
   useEffect(() => {
     setModalSpriteStyle(initialSpriteStyle);
   }, [initialSpriteStyle, pokemonId]);
+
+  useEffect(() => {
+    setModalShader(initialShader);
+  }, [initialShader, pokemonId]);
 
   const loadData = useCallback(async (id: number) => {
     let isMounted = true;
@@ -387,12 +396,17 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
               {/* Clean Specimen Floor Contact Shadow */}
               <div className="holo-floor-shadow" />
 
+              {/* Emulator Screen Shader Overlay (Scanlines / LCD Grid / Cel-Shading) */}
+              {modalShader !== 'none' && (
+                <div className={`shader-overlay-${modalShader}`} aria-hidden="true" />
+              )}
+
               {/* The Pokemon Sprite */}
               <img
-                key={`${activePokemonId}-${modalSpriteStyle}-${isShiny}-${spriteFallbackIdx}`}
+                key={`${activePokemonId}-${modalSpriteStyle}-${modalShader}-${isShiny}-${spriteFallbackIdx}`}
                 src={currentImage}
                 alt={displayTitle}
-                className={`holo-sprite-img sprite-style-${modalSpriteStyle} ${
+                className={`holo-sprite-img sprite-style-${modalSpriteStyle} sprite-shader-${modalShader} ${
                   modalSpriteStyle === 'gba' || modalSpriteStyle === 'ds' ? 'pixelated-sprite' : ''
                 } ${modalSpriteStyle === 'showdown' ? 'showdown-3d-enhanced' : ''}`}
                 draggable={false}
@@ -471,6 +485,28 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
                   >
                     <span className="chip-code">{st.tag}</span>
                     <span className="chip-name">{st.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Hand-Drawn Lineart Shader Toolbar inside Modal */}
+            <div className="modal-shader-switch-bar">
+              <div className="modal-shader-bar-header">
+                <PenTool size={13} color="var(--poke-cyan)" />
+                <span>TRAÇADO DE LINHAS (ESTILO DESENHO)</span>
+              </div>
+              <div className="modal-shader-chips">
+                {EMULATOR_SHADERS.map((sh) => (
+                  <button
+                    key={sh.id}
+                    type="button"
+                    className={`modal-shader-chip ${modalShader === sh.id ? 'active' : ''}`}
+                    onClick={() => setModalShader(sh.id)}
+                    title={sh.description}
+                  >
+                    <span className="shader-chip-code">{sh.tag}</span>
+                    <span className="shader-chip-name">{sh.label}</span>
                   </button>
                 ))}
               </div>
