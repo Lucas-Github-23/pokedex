@@ -728,6 +728,99 @@ body::before {
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6), 0 0 8px rgba(239, 68, 68, 0.35);
 }
 
+/* Modal Alternative Forms Selector Toolbar */
+.modal-forms-switch-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: #090e17;
+  border: 1.5px solid #192233;
+  border-radius: 4px;
+  padding: 8px 10px;
+}
+
+.modal-forms-bar-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-hud);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--poke-cyan);
+  letter-spacing: 0.05em;
+}
+
+.modal-forms-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.modal-form-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 9px;
+  background: #121824;
+  border: 1.5px solid #202c40;
+  border-radius: 4px;
+  color: var(--text-secondary);
+  font-family: var(--font-display);
+  font-size: 0.73rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.12s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.modal-form-chip:hover {
+  background: #1a2335;
+  color: #fff;
+  border-color: #38bdf8;
+  transform: translateY(-1px);
+}
+
+.modal-form-chip.active {
+  background: var(--form-bg, #0284c7);
+  border-color: var(--form-border, #38bdf8);
+  color: #fff;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6), 0 0 10px var(--form-color, rgba(56, 189, 248, 0.5));
+}
+
+.form-chip-tag {
+  font-size: 0.62rem;
+  font-weight: 800;
+  padding: 1px 4px;
+  border-radius: 2px;
+  border: 1px solid;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.modal-form-chip.active .form-chip-tag {
+  background: rgba(0, 0, 0, 0.4) !important;
+  color: #fff !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.form-chip-name {
+  white-space: nowrap;
+}
+
+.spin-inline {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
 .modal-console-chip .chip-code {
   font-family: var(--font-hud);
   font-size: 0.62rem;
@@ -952,6 +1045,79 @@ body::before {
   margin: 4px 0 10px;
   z-index: 1;
 }
+
+/* Card Form Indicator Badges */
+.card-form-indicators {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  z-index: 3;
+}
+
+.card-form-badge {
+  font-family: var(--font-display);
+  font-size: 0.58rem;
+  font-weight: 800;
+  padding: 1px 5px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+  border: 1px solid;
+}
+
+.card-form-badge.badge-mega {
+  color: #38bdf8;
+  background: rgba(3, 105, 161, 0.85);
+  border-color: #38bdf8;
+}
+
+.card-form-badge.badge-gmax {
+  color: #fca5a5;
+  background: rgba(185, 28, 28, 0.85);
+  border-color: #f87171;
+}
+
+.card-form-badge.badge-alola {
+  color: #fef08a;
+  background: rgba(202, 138, 4, 0.85);
+  border-color: #fde047;
+}
+
+.card-form-badge.badge-galar {
+  color: #e9d5ff;
+  background: rgba(126, 34, 206, 0.85);
+  border-color: #c084fc;
+}
+
+.card-form-badge.badge-hisui {
+  color: #bbf7d0;
+  background: rgba(21, 128, 61, 0.85);
+  border-color: #4ade80;
+}
+
+.card-form-badge.badge-paldea {
+  color: #fed7aa;
+  background: rgba(194, 65, 12, 0.85);
+  border-color: #fb923c;
+}
+
+.card-form-badge.badge-primal {
+  color: #fecdd3;
+  background: rgba(190, 18, 60, 0.85);
+  border-color: #f43f5e;
+}
+
+.card-form-badge.badge-origin,
+.card-form-badge.badge-special {
+  color: #99f6e4;
+  background: rgba(15, 118, 110, 0.85);
+  border-color: #2dd4bf;
+}
+
 
 .specimen-sprite-img {
   width: 100px;

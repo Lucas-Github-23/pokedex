@@ -4,6 +4,7 @@ import type { PokemonListItem } from '../types/pokemon';
 import { POKEMON_TYPES } from '../constants/pokemonData';
 import { POKEMON_TYPES_MAP } from '../constants/pokemonTypes';
 import { getJapaneseName } from '../constants/japaneseNames';
+import { KNOWN_ALTERNATIVE_FORMS } from '../constants/pokemonForms';
 import { TypeIcon } from './TypeIcon';
 import type { SpriteStyle } from '../constants/spriteStyles';
 import { getPokemonSpriteUrl } from '../constants/spriteStyles';
@@ -32,6 +33,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
   const typeConfig = POKEMON_TYPES[primaryType] || POKEMON_TYPES.normal;
   const japaneseText = pokemon.japaneseName || getJapaneseName(pokemon.id);
   const spriteUrl = getPokemonSpriteUrl(pokemon.id, spriteStyle, false);
+  const knownForms = KNOWN_ALTERNATIVE_FORMS[pokemon.id];
 
   return (
     <div
@@ -91,6 +93,15 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
         {japaneseText && (
           <div className="specimen-box-watermark" aria-hidden="true">
             {japaneseText}
+          </div>
+        )}
+        {knownForms && knownForms.length > 0 && (
+          <div className="card-form-indicators">
+            {knownForms.slice(0, 2).map((kf, i) => (
+              <span key={i} className={`card-form-badge badge-${kf.category}`}>
+                {kf.tag}
+              </span>
+            ))}
           </div>
         )}
         <img

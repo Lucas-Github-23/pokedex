@@ -12,6 +12,7 @@ import {
 import type { PokemonListItem, GenerationKey, SortKey } from './types/pokemon';
 import { GENERATIONS } from './constants/pokemonData';
 import type { SpriteStyle } from './constants/spriteStyles';
+import { KNOWN_ALTERNATIVE_FORMS } from './constants/pokemonForms';
 
 const PAGE_SIZE = 36;
 
@@ -110,11 +111,41 @@ export const App: React.FC = () => {
       list = list.filter((p) => isFavorite(p.id));
     }
 
-    // 3. Search query filter (supporting prefix syntax 'tipo:' and 'região:' or generic text)
+    // 3. Search query filter (supporting prefix syntax 'tipo:', 'região:' or generic text / form tags)
     const term = searchTerm.trim().toLowerCase();
     if (term) {
       if (term === 'favorito' || term === 'favoritos' || term === 'fav') {
         list = list.filter((p) => isFavorite(p.id));
+      } else if (term === 'mega' || term === 'megas') {
+        list = list.filter((p) =>
+          KNOWN_ALTERNATIVE_FORMS[p.id]?.some((f) => f.category === 'mega')
+        );
+      } else if (term === 'alola' || term === 'alolan') {
+        list = list.filter((p) =>
+          KNOWN_ALTERNATIVE_FORMS[p.id]?.some((f) => f.category === 'alola')
+        );
+      } else if (term === 'galar' || term === 'galarian') {
+        list = list.filter((p) =>
+          KNOWN_ALTERNATIVE_FORMS[p.id]?.some((f) => f.category === 'galar')
+        );
+      } else if (term === 'hisui' || term === 'hisuian') {
+        list = list.filter((p) =>
+          KNOWN_ALTERNATIVE_FORMS[p.id]?.some((f) => f.category === 'hisui')
+        );
+      } else if (term === 'paldea' || term === 'paldean') {
+        list = list.filter((p) =>
+          KNOWN_ALTERNATIVE_FORMS[p.id]?.some((f) => f.category === 'paldea')
+        );
+      } else if (term === 'gmax' || term === 'gigantamax') {
+        list = list.filter((p) =>
+          KNOWN_ALTERNATIVE_FORMS[p.id]?.some((f) => f.category === 'gmax')
+        );
+      } else if (term === 'primal' || term === 'primais') {
+        list = list.filter((p) =>
+          KNOWN_ALTERNATIVE_FORMS[p.id]?.some((f) => f.category === 'primal')
+        );
+      } else if (term === 'forma' || term === 'formas' || term === 'variantes') {
+        list = list.filter((p) => Boolean(KNOWN_ALTERNATIVE_FORMS[p.id]?.length));
       } else if (term.startsWith('tipo:')) {
         const typeArg = term.replace('tipo:', '').trim();
         if (typeArg && selectedType !== typeArg) {
@@ -129,12 +160,15 @@ export const App: React.FC = () => {
           list = list.filter((p) => p.id >= gen.range[0] && p.id <= gen.range[1]);
         }
       } else {
-        // Search by name or ID (e.g. 25, #0025, pikachu)
+        // Search by name, ID (e.g. 25, #0025, pikachu) or form tag match
         const numericSearch = parseInt(term.replace('#', ''), 10);
         list = list.filter((p) => {
           const matchName = p.name.toLowerCase().includes(term);
           const matchId = !isNaN(numericSearch) && p.id === numericSearch;
-          return matchName || matchId;
+          const matchForm = KNOWN_ALTERNATIVE_FORMS[p.id]?.some(
+            (f) => f.tag.toLowerCase().includes(term) || f.category.toLowerCase().includes(term)
+          );
+          return matchName || matchId || matchForm;
         });
       }
     }

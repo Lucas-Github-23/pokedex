@@ -14,12 +14,14 @@ import {
   Weight,
   Sparkle,
   Gamepad2,
+  Layers,
 } from 'lucide-react';
 import type {
   PokemonDetail,
   EvolutionStage,
   GameLocations as IGameLocations,
   PokemonListItem,
+  PokemonVariety,
 } from '../types/pokemon';
 import {
   fetchPokemonDetail,
@@ -29,6 +31,7 @@ import {
 } from '../services/pokeapi';
 import { POKEMON_TYPES, STAT_NAMES } from '../constants/pokemonData';
 import { getJapaneseName } from '../constants/japaneseNames';
+import { FORM_CATEGORY_CONFIG } from '../constants/pokemonForms';
 import { TypeIcon } from './TypeIcon';
 import { EvolutionChain } from './EvolutionChain';
 import { GameLocations } from './GameLocations';
@@ -62,7 +65,10 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
   const [japaneseName, setJapaneseName] = useState<string>('');
   const [evolutionStages, setEvolutionStages] = useState<EvolutionStage[]>([]);
   const [locations, setLocations] = useState<IGameLocations[]>([]);
+  const [varieties, setVarieties] = useState<PokemonVariety[]>([]);
+  const [selectedVariety, setSelectedVariety] = useState<PokemonVariety | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [loadingForm, setLoadingForm] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<TabType>('stats');
   const [isShiny, setIsShiny] = useState<boolean>(false);
   const [isPlayingCry, setIsPlayingCry] = useState<boolean>(false);
@@ -80,6 +86,7 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
     let isMounted = true;
     setLoading(true);
     setIsShiny(false);
+    setSelectedVariety(null);
 
     async function loadData() {
       try {
@@ -98,6 +105,11 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
         setGenus(speciesData.genus);
         setJapaneseName(speciesData.japaneseName || getJapaneseName(pokemonId!));
         setLocations(locData);
+        setVarieties(speciesData.varieties || []);
+
+        // Find default variety
+        const defaultVar = speciesData.varieties?.find((v) => v.is_default) || speciesData.varieties?.[0] || null;
+        setSelectedVariety(defaultVar);
 
         if (speciesData.evolutionChainUrl) {
           const evoStages = await fetchEvolutionChain(speciesData.evolutionChainUrl);
@@ -120,6 +132,21 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
       isMounted = false;
     };
   }, [pokemonId]);
+
+  const handleSelectVariety = async (variety: PokemonVariety) => {
+    if (selectedVariety?.id === variety.id) return;
+    setSelectedVariety(variety);
+    try {
+      setLoadingForm(true);
+      const formDetail = await fetchPokemonDetail(variety.id);
+      setDetail(formDetail);
+    } catch (err) {
+      console.error('Erro ao alternar forma alternativa:', err);
+    } finally {
+      setLoadingForm(false);
+    }
+  };
+
 
   // Keyboard navigation
   useEffect(() => {
@@ -166,7 +193,9 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
   const heightM = detail ? (detail.height / 10).toFixed(1) : '0.0';
   const weightKg = detail ? (detail.weight / 10).toFixed(1) : '0.0';
 
-  const currentImage = getPokemonSpriteUrl(pokemonId, modalSpriteStyle, isShiny);
+  const activePokemonId = selectedVariety?.id || detail?.id || pokemonId || 1;
+  const currentImage = getPokemonSpriteUrl(activePokemonId, modalSpriteStyle, isShiny);
+  const displayTitle = selectedVariety && !selectedVariety.is_default ? selectedVariety.displayName : detail?.name;
 
   return (
     <div className="diagnostic-overlay" onClick={onClose} role="dialog" aria-modal="true">
@@ -187,7 +216,7 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <span className="terminal-id-tag">{formattedId}</span>
-                <span className="terminal-pokemon-title">{detail?.name}</span>
+                <span className="terminal-pokemon-title">{displayTitle}</span>
                 {japaneseName && (
                   <span className="terminal-japanese-tag">{japaneseName}</span>
                 )}
@@ -261,7 +290,7 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
             {/* Navigation & Close Buttons */}
             <div className="terminal-nav-divider" />
 
-            {pokemonId > 1 && (
+            {pokemonId && pokemonId > 1 && (
               <button
                 className="terminal-close-btn"
                 onClick={() => onSelectPokemon(pokemonId - 1)}
@@ -270,7 +299,7 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
                 <ChevronLeft size={16} />
               </button>
             )}
-            {pokemonId < totalPokemonCount && (
+            {pokemonId && pokemonId < totalPokemonCount && (
               <button
                 className="terminal-close-btn"
                 onClick={() => onSelectPokemon(pokemonId + 1)}
@@ -330,13 +359,60 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
                     className={`holo-sprite-img ${modalSpriteStyle !== 'official' ? 'pixelated-sprite' : ''}`}
                     draggable={false}
                     onError={(e) => {
-                      (e.target as HTMLImageElement).src = getPokemonSpriteUrl(pokemonId, 'official', isShiny);
+                      (e.target as HTMLImageElement).src = getPokemonSpriteUrl(activePokemonId, 'official', isShiny);
                     }}
                   />
 
                   {/* Vertical Scanner Line */}
                   <div className="holo-laser-scanline" />
                 </div>
+
+                {/* Alternative Form Variations Switcher */}
+                {varieties.length > 1 && (
+                  <div className="modal-forms-switch-bar">
+                    <div className="modal-forms-bar-header">
+                      <Layers size={13} color="var(--poke-cyan)" />
+                      <span>FORMAS ALTERNATIVAS ({varieties.length})</span>
+                      {loadingForm && <Loader2 size={12} className="spin-inline" color="var(--poke-cyan)" />}
+                    </div>
+                    <div className="modal-forms-chips">
+                      {varieties.map((v) => {
+                        const isSelected = selectedVariety ? selectedVariety.id === v.id : v.is_default;
+                        const catConfig = FORM_CATEGORY_CONFIG[v.category] || FORM_CATEGORY_CONFIG.default;
+                        return (
+                          <button
+                            key={v.id}
+                            type="button"
+                            className={`modal-form-chip ${isSelected ? 'active' : ''}`}
+                            onClick={() => handleSelectVariety(v)}
+                            title={v.displayName}
+                            style={
+                              isSelected
+                                ? ({
+                                    '--form-color': catConfig.color,
+                                    '--form-border': catConfig.border,
+                                    '--form-bg': catConfig.bg,
+                                  } as React.CSSProperties)
+                                : undefined
+                            }
+                          >
+                            <span
+                              className="form-chip-tag"
+                              style={{
+                                color: catConfig.color,
+                                borderColor: `${catConfig.color}66`,
+                                background: `${catConfig.color}22`,
+                              }}
+                            >
+                              {v.tag}
+                            </span>
+                            <span className="form-chip-name">{v.displayName}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
 
                 {/* Console Style Toolbar inside Modal */}
                 <div className="modal-console-switch-bar">

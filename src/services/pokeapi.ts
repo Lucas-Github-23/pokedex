@@ -3,9 +3,12 @@ import type {
   PokemonDetail,
   EvolutionStage,
   GameLocations,
+  PokemonSpeciesData,
+  PokemonVariety,
 } from '../types/pokemon';
 import { GAME_VERSION_COLORS } from '../constants/pokemonData';
 import { POKEMON_TYPES_MAP } from '../constants/pokemonTypes';
+import { formatVarietyInfo } from '../constants/pokemonForms';
 
 const BASE_URL = 'https://pokeapi.co/api/v2';
 
@@ -125,13 +128,7 @@ export async function fetchPokemonDetail(idOrName: string | number): Promise<Pok
   }
 }
 
-export async function fetchPokemonSpecies(speciesUrl: string): Promise<{
-  evolutionChainUrl: string;
-  flavorText: string;
-  genus: string;
-  generation: string;
-  japaneseName: string;
-}> {
+export async function fetchPokemonSpecies(speciesUrl: string): Promise<PokemonSpeciesData> {
   if (speciesCache.has(speciesUrl)) {
     return speciesCache.get(speciesUrl);
   }
@@ -161,12 +158,28 @@ export async function fetchPokemonSpecies(speciesUrl: string): Promise<{
     );
     const genus = genusEntry?.genus || 'Pokémon';
 
-    const result = {
+    // Parse varieties
+    const varieties: PokemonVariety[] = (data.varieties || []).map((v: any) => {
+      const varietyId = getPokemonIdFromUrl(v.pokemon.url);
+      const info = formatVarietyInfo(v.pokemon.name, data.name || '', v.is_default);
+      return {
+        id: varietyId,
+        name: v.pokemon.name,
+        url: v.pokemon.url,
+        is_default: v.is_default,
+        displayName: info.displayName,
+        category: info.category,
+        tag: info.tag,
+      };
+    });
+
+    const result: PokemonSpeciesData = {
       evolutionChainUrl: data.evolution_chain?.url || '',
       flavorText,
       genus,
       generation: data.generation?.name || '',
       japaneseName,
+      varieties,
     };
 
     speciesCache.set(speciesUrl, result);
@@ -179,6 +192,7 @@ export async function fetchPokemonSpecies(speciesUrl: string): Promise<{
       genus: 'Pokémon',
       generation: '',
       japaneseName: '',
+      varieties: [],
     };
   }
 }
