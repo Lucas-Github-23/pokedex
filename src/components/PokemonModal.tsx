@@ -40,10 +40,9 @@ import { FORM_CATEGORY_CONFIG } from '../constants/pokemonForms';
 import { TypeIcon } from './TypeIcon';
 import { EvolutionChain } from './EvolutionChain';
 import { GameLocations } from './GameLocations';
-import type { SpriteStyle, EmulatorShader } from '../constants/spriteStyles';
+import type { SpriteStyle } from '../constants/spriteStyles';
 import {
   SPRITE_STYLES,
-  EMULATOR_SHADERS,
   getPokemonSpriteUrl,
   getSpriteFallbackChain,
 } from '../constants/spriteStyles';
@@ -58,7 +57,6 @@ interface PokemonModalProps {
   onToggleFavorite: (pokemon: PokemonListItem, event?: React.MouseEvent) => void;
   totalPokemonCount?: number;
   initialSpriteStyle?: SpriteStyle;
-  initialShader?: EmulatorShader;
 }
 
 type TabType = 'stats' | 'evolution' | 'locations';
@@ -72,7 +70,6 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
   onToggleFavorite,
   totalPokemonCount = 1025,
   initialSpriteStyle = 'official',
-  initialShader = 'none',
 }) => {
   const [detail, setDetail] = useState<PokemonDetail | null>(null);
   const [flavorText, setFlavorText] = useState<string>('');
@@ -89,7 +86,6 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
   const [isShiny, setIsShiny] = useState<boolean>(false);
   const [isPlayingCry, setIsPlayingCry] = useState<boolean>(false);
   const [modalSpriteStyle, setModalSpriteStyle] = useState<SpriteStyle>(initialSpriteStyle);
-  const [modalShader, setModalShader] = useState<EmulatorShader>(initialShader);
   const [spriteFallbackIdx, setSpriteFallbackIdx] = useState<number>(0);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -97,10 +93,6 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
   useEffect(() => {
     setModalSpriteStyle(initialSpriteStyle);
   }, [initialSpriteStyle, pokemonId]);
-
-  useEffect(() => {
-    setModalShader(initialShader);
-  }, [initialShader, pokemonId]);
 
   const loadData = useCallback(async (id: number) => {
     let isMounted = true;
@@ -245,7 +237,10 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
     fallbackChain[0] ||
     getPokemonSpriteUrl(activePokemonId, modalSpriteStyle, isShiny, activePokemonName);
 
-  const { imageSrc: xbrProcessedImage } = useXbrImage(currentImage, modalShader);
+  // Apply xBR 2x specifically to Showdown 3D; retro consoles stay clean pixelated with zero blur
+  const isShowdown = modalSpriteStyle === 'showdown';
+  const isPixelArt = modalSpriteStyle === 'gba' || modalSpriteStyle === 'ds';
+  const { imageSrc: renderedModalImage } = useXbrImage(currentImage, isShowdown ? 'xbr-2x' : 'none');
 
   const displayTitle =
     selectedVariety && !selectedVariety.is_default
@@ -398,19 +393,14 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
               {/* Clean Specimen Floor Contact Shadow */}
               <div className="holo-floor-shadow" />
 
-              {/* Emulator Screen Shader Overlay (Scanlines / LCD Grid / Cel-Shading) */}
-              {modalShader !== 'none' && (
-                <div className={`shader-overlay-${modalShader}`} aria-hidden="true" />
-              )}
-
               {/* The Pokemon Sprite */}
               <img
-                key={`${activePokemonId}-${modalSpriteStyle}-${modalShader}-${isShiny}-${spriteFallbackIdx}`}
-                src={xbrProcessedImage}
+                key={`${activePokemonId}-${modalSpriteStyle}-${isShiny}-${spriteFallbackIdx}`}
+                src={renderedModalImage}
                 alt={displayTitle}
-                className={`holo-sprite-img sprite-style-${modalSpriteStyle} sprite-shader-${modalShader} ${
-                  modalSpriteStyle === 'gba' || modalSpriteStyle === 'ds' ? 'pixelated-sprite' : ''
-                } ${modalSpriteStyle === 'showdown' ? 'showdown-3d-enhanced' : ''}`}
+                className={`holo-sprite-img sprite-style-${modalSpriteStyle} ${
+                  isPixelArt ? 'pixelated-sprite' : ''
+                } ${isShowdown ? 'showdown-3d-xbr' : ''}`}
                 draggable={false}
                 onError={() => {
                   setSpriteFallbackIdx((prev) =>
@@ -487,28 +477,6 @@ export const PokemonModal: React.FC<PokemonModalProps> = ({
                   >
                     <span className="chip-code">{st.tag}</span>
                     <span className="chip-name">{st.label}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* xBR Vectorization & Lineart Shader Toolbar inside Modal */}
-            <div className="modal-shader-switch-bar">
-              <div className="modal-shader-bar-header">
-                <Sparkles size={13} color="var(--poke-cyan)" />
-                <span>FILTRO xBR (VETORIZADOR DE LINHAS)</span>
-              </div>
-              <div className="modal-shader-chips">
-                {EMULATOR_SHADERS.map((sh) => (
-                  <button
-                    key={sh.id}
-                    type="button"
-                    className={`modal-shader-chip ${modalShader === sh.id ? 'active' : ''}`}
-                    onClick={() => setModalShader(sh.id)}
-                    title={sh.description}
-                  >
-                    <span className="shader-chip-code">{sh.tag}</span>
-                    <span className="shader-chip-name">{sh.label}</span>
                   </button>
                 ))}
               </div>

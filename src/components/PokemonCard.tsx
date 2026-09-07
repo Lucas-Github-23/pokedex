@@ -6,7 +6,7 @@ import { POKEMON_TYPES_MAP } from '../constants/pokemonTypes';
 import { getJapaneseName } from '../constants/japaneseNames';
 import { KNOWN_ALTERNATIVE_FORMS } from '../constants/pokemonForms';
 import { TypeIcon } from './TypeIcon';
-import type { SpriteStyle, EmulatorShader } from '../constants/spriteStyles';
+import type { SpriteStyle } from '../constants/spriteStyles';
 import {
   getPokemonSpriteUrl,
   getSpriteFallbackChain,
@@ -20,7 +20,6 @@ interface PokemonCardProps {
   onToggleFavorite: (pokemon: PokemonListItem, event?: React.MouseEvent) => void;
   onSelect: (id: number) => void;
   spriteStyle?: SpriteStyle;
-  shader?: EmulatorShader;
 }
 
 export const PokemonCard: React.FC<PokemonCardProps> = ({
@@ -29,7 +28,6 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
   onToggleFavorite,
   onSelect,
   spriteStyle = 'official',
-  shader = 'none',
 }) => {
   const formattedId = `№ ${String(pokemon.id).padStart(4, '0')}`;
   const resolvedTypes =
@@ -40,7 +38,12 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
   const typeConfig = POKEMON_TYPES[primaryType] || POKEMON_TYPES.normal;
   const japaneseText = pokemon.japaneseName || getJapaneseName(pokemon.id);
   const spriteUrl = getPokemonSpriteUrl(pokemon.id, spriteStyle, false, pokemon.name);
-  const { imageSrc: xbrProcessedSprite } = useXbrImage(spriteUrl, shader);
+
+  // Apply xBR 2x specifically to Showdown 3D models; retro consoles stay clean pixelated
+  const isShowdown = spriteStyle === 'showdown';
+  const isPixelArt = spriteStyle === 'gba' || spriteStyle === 'ds';
+  const { imageSrc: renderedSprite } = useXbrImage(spriteUrl, isShowdown ? 'xbr-2x' : 'none');
+
   const fallbackChain = React.useMemo(
     () => getSpriteFallbackChain(pokemon.id, spriteStyle, false, pokemon.name),
     [pokemon.id, spriteStyle, pokemon.name]
@@ -102,9 +105,6 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
       {/* Recessed Sub-Screen / Specimen Viewport */}
       <div className="specimen-sprite-box">
         <div className="specimen-subscreen-bevel" />
-        {shader && shader !== 'none' && (
-          <div className={`shader-overlay-${shader}`} aria-hidden="true" />
-        )}
         {japaneseText && (
           <div className="specimen-box-watermark" aria-hidden="true">
             {japaneseText}
@@ -120,12 +120,12 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
           </div>
         )}
         <img
-          key={`${pokemon.id}-${spriteStyle}-${shader}`}
-          src={xbrProcessedSprite}
+          key={`${pokemon.id}-${spriteStyle}`}
+          src={renderedSprite}
           alt={pokemon.name}
-          className={`specimen-sprite-img sprite-style-${spriteStyle} sprite-shader-${shader} ${
-            spriteStyle === 'gba' || spriteStyle === 'ds' ? 'pixelated-sprite' : ''
-          } ${spriteStyle === 'showdown' ? 'showdown-3d-enhanced' : ''}`}
+          className={`specimen-sprite-img sprite-style-${spriteStyle} ${
+            isPixelArt ? 'pixelated-sprite' : ''
+          } ${isShowdown ? 'showdown-3d-xbr' : ''}`}
           loading="lazy"
           draggable={false}
           data-fallback-index="0"

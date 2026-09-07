@@ -1429,20 +1429,24 @@ body::before {
   z-index: 2;
 }
 
-/* Pixel-perfect razor-sharp rendering for retro consoles (GBA, GBC, GB, DS) */
+/* Pixel-perfect razor-sharp rendering for retro consoles (GBA, GBC, GB, DS) - ZERO BLUR */
 .pixelated-sprite,
-.specimen-sprite-img.pixelated-sprite {
-  image-rendering: pixelated;
-  image-rendering: -moz-crisp-edges;
-  image-rendering: crisp-edges;
+.specimen-sprite-img.pixelated-sprite,
+.sprite-style-gba,
+.sprite-style-ds {
+  image-rendering: pixelated !important;
+  image-rendering: -moz-crisp-edges !important;
+  image-rendering: crisp-edges !important;
 }
 
-/* Showdown 3D Animated Model Enhancements */
+/* Showdown 3D Animated Model with xBR 2x */
+.showdown-3d-xbr,
+.specimen-sprite-img.showdown-3d-xbr,
 .showdown-3d-enhanced,
 .specimen-sprite-img.showdown-3d-enhanced {
   image-rendering: auto;
   image-rendering: -webkit-optimize-contrast;
-  filter: contrast(1.08) brightness(1.04) saturate(1.15) drop-shadow(0 4px 10px rgba(0, 0, 0, 0.65));
+  filter: contrast(1.06) brightness(1.03) saturate(1.12) drop-shadow(0 4px 10px rgba(0, 0, 0, 0.65));
   will-change: transform, filter;
 }
 
@@ -1775,19 +1779,20 @@ body::before {
 }
 
 .holo-sprite-img.pixelated-sprite {
-  image-rendering: pixelated;
-  image-rendering: -moz-crisp-edges;
-  image-rendering: crisp-edges;
+  image-rendering: pixelated !important;
+  image-rendering: -moz-crisp-edges !important;
+  image-rendering: crisp-edges !important;
   max-width: 160px;
   max-height: 160px;
 }
 
+.holo-sprite-img.showdown-3d-xbr,
 .holo-sprite-img.showdown-3d-enhanced {
   image-rendering: auto;
   image-rendering: -webkit-optimize-contrast;
   max-width: 210px;
   max-height: 210px;
-  filter: contrast(1.09) brightness(1.04) saturate(1.16) drop-shadow(0 12px 20px rgba(0, 0, 0, 0.75)) drop-shadow(0 0 16px rgba(0, 240, 255, 0.16));
+  filter: contrast(1.06) brightness(1.03) saturate(1.12) drop-shadow(0 12px 20px rgba(0, 0, 0, 0.75));
 }
 
 /* Modal Elemental Badges */
